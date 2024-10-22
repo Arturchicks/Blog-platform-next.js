@@ -10,6 +10,8 @@
     "plugin:react-hooks/recommended",
     "plugin:import/recommended",
     "plugin:react/jsx-runtime",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -17,6 +19,22 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "react"],
-  "rules": {}
+  "plugins": ["prettier", "@typescript-eslint", "react"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
+  "rules": {
+    "semi": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": "off"
+  }
 }
