@@ -1,2 +1,2 @@
-export * from "./ui/Article";
+export * from "./ui/article/Article";
 export * from "./model/types";
