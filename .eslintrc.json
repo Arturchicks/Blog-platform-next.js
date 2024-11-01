@@ -35,7 +35,6 @@
         "endOfLine": "auto"
       }
     ],
-    "semi": "off", 
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-var-requires": "off"
   }
