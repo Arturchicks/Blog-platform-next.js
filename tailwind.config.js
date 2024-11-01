@@ -1,5 +1,5 @@
-import daisyui from "daisyui";
-import typography from "@tailwindcss/typography";
+import daisyui from "daisyui"
+import typography from "@tailwindcss/typography"
 
 export default {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -7,7 +7,9 @@ export default {
     fontFamily: {
       sans: ["Inter", "sans-serif"],
       "PT-Sans": ["PT Sans", "sans-serif"],
+      Roboto: ["Roboto", "sans-serif"],
     },
+    extend: {},
     screens: {
       lg: "990px",
       xl: "1200px",
@@ -15,4 +17,4 @@ export default {
     },
   },
   plugins: [typography, daisyui],
-};
+}

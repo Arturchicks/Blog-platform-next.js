@@ -1,15 +1,19 @@
-import React from "react";
-import Articles from "../pages/Articles/Articles";
-import ErrorBoundary from "../shared/redux/errorBoundary";
-import Header from "../widgets/header/header";
+import React, { useState } from "react"
+import ErrorBoundary from "./errorBoundary"
+import { Header } from "widgets/header"
+import { Outlet } from "react-router-dom"
+import { Articles } from "pages/Articles"
+import { useGetArticleQuery } from "shared/redux/api"
+
 const App: React.FC = () => {
+  ;("Render App")
   return (
     <div className="flex flex-col gap-5">
       <ErrorBoundary>
         <Header />
-        <Articles />
+        <Outlet />
       </ErrorBoundary>
     </div>
-  );
-};
-export default App;
+  )
+}
+export default App

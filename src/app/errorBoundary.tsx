@@ -1,23 +1,23 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from "react"
 interface Props {
-  children?: ReactNode;
+  children?: ReactNode
 }
 interface State {
-  hasError: boolean;
+  hasError: boolean
 }
 class ErrorBoundary extends React.Component<Props, State> {
-  public state: State = { hasError: false };
+  public state: State = { hasError: false }
   public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true };
+    return { hasError: true }
   }
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.log(error, errorInfo);
+    console.log(error)
   }
   public render(): React.ReactNode {
     if (this.state.hasError) {
-      return <h1>Что-то пошло не так</h1>;
+      return <h1>Что-то пошло не так</h1>
     }
-    return this.props.children;
+    return this.props.children
   }
 }
-export default ErrorBoundary;
+export default ErrorBoundary

@@ -1,15 +1,10 @@
-import React, { ReactElement } from "react";
-interface IButton {
-  variant: "Sign In" | "Sign Up";
-  className?: string;
-  children?: ReactElement;
-}
-const SignButton: React.FC<IButton> = ({ variant, className }): ReactElement => {
-  return (
-    <>
-      {variant === "Sign In" && <button className={className}>Sign In</button>}
-      {variant === "Sign Up" && <button className={className}>Sign Up</button>}
-    </>
-  );
-};
-export default SignButton;
+import { Button } from "@mui/material"
+import { styled } from "@mui/material"
+import { blue } from "@mui/material/colors"
+export const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(blue[500]),
+  backgroundColor: "#1890FF",
+  "&:hover": {
+    backgroundColor: "#2979ff",
+  },
+}))

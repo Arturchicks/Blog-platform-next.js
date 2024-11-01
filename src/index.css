@@ -1,4 +1,61 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https: //fonts.google.com/share?selection.family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+.scrollbar-gutter {
+  scrollbar-gutter: stable;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  scrollbar-gutter: stable;
+  background-color: #ebeef3;
+  height: 100%;
+}
+body {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #ebeef3;
+}
+
+@keyframes display {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes transform {
+  0% {
+    left: 6%;
+  }
+  100% {
+    left: 50%;
+  }
+}
+@keyframes transform-back {
+  0% {
+    left: 50%;
+  }
+
+  100% {
+    left: 6%;
+  }
+}
+.animate-display {
+  animation: display 0.5s ease-in-out;
+}
+.animate-transform {
+  animation: transform 0.5s ease-in-out forwards;
+}
+.animate-transform-back {
+  animation: transform-back 0.5s ease-in-out forwards;
+}
