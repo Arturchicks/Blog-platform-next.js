@@ -6,7 +6,7 @@ export const Policy: React.FC = () => {
     <div className="flex flex-col">
       <span className="w-[100%] inline-block h-[1px] border border-[#E8E8E8]" />
       <label htmlFor="policy" className="flex pt-2">
-        <Checkbox id="policy" className="max-h-[42px]" />
+        <Checkbox id="policy" className="max-h-[42px]" inputProps={{ style: { width: `${20}em`, height: `${3}em` } }} />
         <span className="pt-2 text-[#595959] text-[14px]">I agree to the processing of my personal information</span>
       </label>
     </div>
