@@ -5,19 +5,25 @@ import { ColorButton } from "shared/ui/signButton"
 import { Button } from "@mui/material"
 import { Tag } from "./ui/tag"
 import { nanoid } from "nanoid"
+import { schema } from "./utils/schema"
+import { yupResolver } from "@hookform/resolvers/yup"
 const CreateArticle: React.FC = (): JSX.Element => {
-  const tags = useRef<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
   const [firstRender, setFirstRender] = useState<boolean>(true)
+  const tagList = useRef<string[]>([])
+  const ref = React.createRef<HTMLTextAreaElement>()
   const [state, setState] = useState<boolean>(false)
   const handleDelete = useCallback((key: string) => {
-    tags.current = tags.current.filter((e) => e !== key)
-    setState((prev) => !prev)
+    tagList.current = tagList.current.filter((e) => e !== key)
+    setTags([...tagList.current])
+    console.log(tags)
   }, [])
+  console.log(tags, tagList)
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm({ resolver: yupResolver(schema) })
   const onSubmit = handleSubmit((data) => {
     console.log(data)
   })
@@ -30,7 +36,15 @@ const CreateArticle: React.FC = (): JSX.Element => {
             <div className="flex flex-col gap-3">
               <label htmlFor="title">
                 Title
-                <LabeledTextarea rows={1} placeholder="Title" id="title" labelText="Title" width={100} />
+                <LabeledTextarea
+                  rows={1}
+                  placeholder="Title"
+                  id="title"
+                  labelText="Title"
+                  width={100}
+                  {...register("title")}
+                  ref={ref}
+                />
               </label>
               <label htmlFor="description">
                 Description
@@ -40,18 +54,26 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   id="description"
                   labelText="Description"
                   width={100}
+                  {...register("description")}
                 />
               </label>
               <label htmlFor="text">
                 Text
-                <LabeledTextarea rows={7} placeholder="Text" id="text" labelText="Text" width={100} />
+                <LabeledTextarea
+                  rows={7}
+                  placeholder="Text"
+                  id="text"
+                  labelText="Text"
+                  width={100}
+                  {...register("text")}
+                />
               </label>
-              {(tags.current.length && (
+              {(tags?.length && (
                 <div className="relative w-[50%]">
                   <ul className="h-20 flex flex-col gap-2 overflow-auto animate-display scrollbar-gutter">
-                    {tags.current.map((e) => (
+                    {tags?.map((e) => (
                       <li key={e} className="animate-display">
-                        <Tag key={e} delete={handleDelete} id={e} />
+                        <Tag key={e} delete={handleDelete} id={e} {...register("tag")} ref={ref} />
                       </li>
                     ))}
                   </ul>
@@ -62,11 +84,12 @@ const CreateArticle: React.FC = (): JSX.Element => {
               <Button
                 variant="outlined"
                 className={
-                  !firstRender ? (tags.current.length ? "animate-transform" : "animate-transform-back") : "animate-none"
+                  !firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"
                 }
                 sx={{ position: "absolute", bottom: "21%", left: "6%" }}
                 onClick={(e) => {
-                  tags.current.push(nanoid())
+                  tagList.current.push(nanoid())
+                  setTags([...tagList.current])
                   setState((prev) => !prev)
                   setFirstRender(false)
                 }}
@@ -76,10 +99,10 @@ const CreateArticle: React.FC = (): JSX.Element => {
             </div>
           </fieldset>
         </div>
+        <ColorButton type="submit" className="w-[200px]" sx={{ position: "absolute", bottom: 20, left: 20 }}>
+          Send
+        </ColorButton>
       </form>
-      <ColorButton type="submit" className="w-[200px]" sx={{ position: "absolute", bottom: 20, left: 20 }}>
-        Send
-      </ColorButton>
     </div>
   )
 }

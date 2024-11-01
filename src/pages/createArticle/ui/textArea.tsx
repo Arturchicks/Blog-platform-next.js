@@ -1,38 +1,42 @@
 import * as React from "react"
 import { TextareaAutosize as BaseTextareaAutosize } from "@mui/material"
-import { styled, width } from "@mui/system"
+import { styled } from "@mui/system"
+import { ref } from "yup"
 interface Textarea {
   rows: number
   placeholder: string
   id?: string
   labelText?: string
   width: number
+  name: string
+  ref?: React.LegacyRef<HTMLTextAreaElement>
 }
-export const LabeledTextarea: React.FC<Textarea> = ({ rows, placeholder, id, labelText, width }) => {
-  const blue = {
-    100: "#DAECFF",
-    200: "#b6daff",
-    400: "#3399FF",
-    500: "#007FFF",
-    600: "#0072E5",
-    900: "#003A75",
-  }
+export const LabeledTextarea = React.forwardRef<HTMLTextAreaElement, Textarea>(
+  ({ rows, placeholder, id, width, name }, ref) => {
+    const blue = {
+      100: "#DAECFF",
+      200: "#b6daff",
+      400: "#3399FF",
+      500: "#007FFF",
+      600: "#0072E5",
+      900: "#003A75",
+    }
 
-  const grey = {
-    50: "#F3F6F9",
-    100: "#E5EAF2",
-    200: "#DAE2ED",
-    300: "#C7D0DD",
-    400: "#B0B8C4",
-    500: "#9DA8B7",
-    600: "#6B7A90",
-    700: "#434D5B",
-    800: "#303740",
-    900: "#1C2025",
-  }
+    const grey = {
+      50: "#F3F6F9",
+      100: "#E5EAF2",
+      200: "#DAE2ED",
+      300: "#C7D0DD",
+      400: "#B0B8C4",
+      500: "#9DA8B7",
+      600: "#6B7A90",
+      700: "#434D5B",
+      800: "#303740",
+      900: "#1C2025",
+    }
 
-  const Textarea = styled(BaseTextareaAutosize)(
-    ({ theme }) => `
+    const Textarea = styled(BaseTextareaAutosize)(
+      ({ theme }) => `
     box-sizing: border-box;
     width: ${width}%;
     resize: none;
@@ -60,7 +64,11 @@ export const LabeledTextarea: React.FC<Textarea> = ({ rows, placeholder, id, lab
       outline: 0;
     }
   `
-  )
+    )
 
-  return <Textarea aria-label="minimum height" minRows={rows} placeholder={placeholder} id={id} name={id} />
-}
+    return (
+      <Textarea aria-label="minimum height" minRows={rows} placeholder={placeholder} id={id} name={name} ref={ref} />
+    )
+  }
+)
+LabeledTextarea.displayName = "LabeledTextarea"
