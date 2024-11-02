@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState, useRef } from "react"
+import React, { useCallback, useLayoutEffect, useMemo, useState, useRef } from "react"
 import { nanoid } from "nanoid"
 import { IArticle } from "../../../entities/article"
 import Article from "../../../entities/article/ui/article/Article"
@@ -17,7 +17,10 @@ export const ArticleList: React.FC = () => {
     page.current = value
   }, [])
   useLayoutEffect(() => {
-    if (data) setCount(Math.floor(data?.articlesCount / 20))
+    if (data) {
+      setCount(Math.floor(data?.articlesCount / 20))
+      window.scrollTo(0, 0)
+    }
   }, [data])
   const articles = useMemo(() => {
     return data?.articles.map((article: IArticle) => <Article {...article} key={nanoid()} />)
