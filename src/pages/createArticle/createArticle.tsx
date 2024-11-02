@@ -45,8 +45,11 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   {...register("title")}
                   size="small"
                   sx={{ width: "100%" }}
+                  error={!!errors.title}
                 />
-                {errors.title && <p className="animate-display text-red-500 font-Roboto text-xs">required</p>}
+                {errors.title && (
+                  <p className="animate-display text-red-500 font-Roboto text-xs">{errors.title.message}</p>
+                )}
               </label>
               <label htmlFor="description" className="relative  h-20">
                 Description
@@ -57,6 +60,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   {...register("description")}
                   size="small"
                   sx={{ width: "100%" }}
+                  error={!!errors.description}
                 />
                 {errors.description ? (
                   <p className="animate-display  text-red-500 font-Roboto text-xs">{errors.description.message}</p>
@@ -71,6 +75,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   id="text"
                   {...register("text")}
                   sx={{ width: "100%" }}
+                  error={!!errors.text}
                 />
                 {errors.text ? (
                   <p className="animate-display text-red-500 font-Roboto text-xs">{errors.text.message}</p>
@@ -88,6 +93,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                             id={e}
                             register={register(`tags.${index}`)}
                             index={index}
+                            error={!!errors.tags?.[index]}
                           />
                           {errors?.tags?.[index] ? (
                             <p className="animate-display absolute bottom-0 text-red-500 font-Roboto text-xs">

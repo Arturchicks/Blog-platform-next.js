@@ -40,7 +40,7 @@ export const AppHeader: React.FC = () => {
         <div className="flex gap-5 items-center animate-display">
           <Link
             to={"/create-article"}
-            className="w-[112px] h-[30px] text-[#52C41A] border border-[#52C41A] rounded flex items-center justify-center hover:opacity-50"
+            className="p-[0.3em] text-[#52C41A] border border-[#52C41A] rounded flex items-center justify-center hover:opacity-50"
           >
             Create article
           </Link>

@@ -6,11 +6,12 @@ interface Tag {
   id: string
   register: UseFormRegisterReturn
   index: number
+  error: boolean
 }
 export const Tag = (props: Tag): JSX.Element => {
   return (
     <div className="flex items-center gap-5">
-      <TextField rows={1} placeholder="tag" size="small" {...props.register} defaultValue={""} />
+      <TextField rows={1} placeholder="tag" size="small" {...props.register} error={props.error} />
       <Button variant="outlined" size="small" color="error" onClick={() => props.delete(props.id, props.index)}>
         Delete
       </Button>

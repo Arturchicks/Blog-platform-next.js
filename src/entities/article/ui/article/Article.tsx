@@ -33,7 +33,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         <div className="flex h-[46px] gap-2">
           <div className="flex flex-col text-right">
             <span>{props.author.username}</span>
-            <span>{formatDate(props.createdAt)}</span>
+            <span className="text-[#00000080] text-xs">{formatDate(props.createdAt)}</span>
           </div>
           <div className="w-[46px] rounded-[50%]">
             {!load && <CircularProgress />}
