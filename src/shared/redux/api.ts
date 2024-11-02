@@ -1,29 +1,11 @@
-import { createApi, fetchBaseQuery, RootState } from "@reduxjs/toolkit/query/react"
-import { IArticle } from "../../entities/article"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import { QueryArticles, QueryArgs, MutationAccount, User, MutationArticle, Article } from "./types"
 
-interface QueryArticles {
-  articles: IArticle[]
-  articlesCount: number
-}
-interface QueryArgs {
-  offset: number
-  tag: string | undefined
-}
-interface MutationAccount {
-  user: {
-    username: string
-    email: string
-    token: string
-  }
-}
-interface User {
-  user: { username: string; email: string; password: string }
-}
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://blog-platform.kata.academy/api/",
-    prepareHeaders: (headers, { getState, endpoint }) => {
+    prepareHeaders: (headers) => {
       if (localStorage.getItem("token")) {
         headers.set("Authorization", `Token ${localStorage.getItem("token")}`)
       }
@@ -63,6 +45,13 @@ export const baseApi = createApi({
         body: user,
       }),
     }),
+    createArticle: builder.mutation<MutationArticle, Article>({
+      query: (article) => ({
+        url: "/articles",
+        method: "POST",
+        body: article,
+      }),
+    }),
   }),
 })
 export const {
@@ -72,4 +61,5 @@ export const {
   useLoginUserMutation,
   useGetCurrentUserQuery,
   useGetArticleQuery,
+  useCreateArticleMutation,
 } = baseApi

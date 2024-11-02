@@ -6,10 +6,13 @@ import { Tag } from "./ui/tag"
 import { nanoid } from "nanoid"
 import { schema } from "./utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
+import { useCreateArticleMutation } from "shared/redux/api"
+import { useNavigate } from "react-router-dom"
 
 const CreateArticle: React.FC = (): JSX.Element => {
   const [tags, setTags] = useState<string[]>([])
   const [firstRender, setFirstRender] = useState<boolean>(true)
+  const [create] = useCreateArticleMutation()
   const tagList = useRef<string[]>([])
   const {
     register,
@@ -20,14 +23,20 @@ const CreateArticle: React.FC = (): JSX.Element => {
 
   const handleDelete = useCallback(
     (key: string, index: number) => {
-      resetField(`tags.${index}`)
+      resetField(`tagList.${index}`)
       tagList.current = tagList.current.filter((e) => e !== key)
       setTags([...tagList.current])
     },
     [resetField]
   )
-
-  const onSubmit = handleSubmit((data) => console.log(data))
+  const navigate = useNavigate()
+  const onSubmit = handleSubmit(async (data) => {
+    const { title, description, body, tagList } = data
+    const res = await create({ article: { title, description, body, tagList } })
+    if (res.data) navigate("/articles")
+    console.log(res)
+    console.log(data)
+  })
 
   return (
     <div className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-[28px] animate-display relative">
@@ -72,13 +81,13 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   rows={5}
                   multiline={true}
                   placeholder="Text"
-                  id="text"
-                  {...register("text")}
+                  id="body"
+                  {...register("body")}
                   sx={{ width: "100%" }}
-                  error={!!errors.text}
+                  error={!!errors.body}
                 />
-                {errors.text ? (
-                  <p className="animate-display text-red-500 font-Roboto text-xs">{errors.text.message}</p>
+                {errors.body ? (
+                  <p className="animate-display text-red-500 font-Roboto text-xs">{errors.body.message}</p>
                 ) : null}
               </label>
               {(tags?.length && (
@@ -91,13 +100,13 @@ const CreateArticle: React.FC = (): JSX.Element => {
                             delete={handleDelete}
                             key={e}
                             id={e}
-                            register={register(`tags.${index}`)}
+                            register={register(`tagList.${index}`)}
                             index={index}
-                            error={!!errors.tags?.[index]}
+                            error={!!errors.tagList?.[index]}
                           />
-                          {errors?.tags?.[index] ? (
+                          {errors?.tagList?.[index] ? (
                             <p className="animate-display absolute bottom-0 text-red-500 font-Roboto text-xs">
-                              {errors?.tags?.[index]?.message}
+                              {errors?.tagList?.[index]?.message}
                             </p>
                           ) : null}
                         </label>
