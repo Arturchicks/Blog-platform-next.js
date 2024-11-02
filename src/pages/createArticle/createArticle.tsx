@@ -12,11 +12,9 @@ const CreateArticle: React.FC = (): JSX.Element => {
   const [firstRender, setFirstRender] = useState<boolean>(true)
   const tagList = useRef<string[]>([])
   const ref = React.createRef<HTMLTextAreaElement>()
-  const [state, setState] = useState<boolean>(false)
   const handleDelete = useCallback((key: string) => {
     tagList.current = tagList.current.filter((e) => e !== key)
     setTags([...tagList.current])
-    console.log(tags)
   }, [])
   console.log(tags, tagList)
   const {
@@ -28,7 +26,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
     console.log(data)
   })
   return (
-    <div className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-8 animate-display relative">
+    <div className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-[28px] animate-display relative">
       <h3 className="text-center font-Roboto">Create new article</h3>
       <form className="flex flex-col gap-5 " id="create-article-form" onSubmit={onSubmit}>
         <div className="flex flex-col gap-12">
@@ -81,21 +79,6 @@ const CreateArticle: React.FC = (): JSX.Element => {
                 </div>
               )) ||
                 null}
-              <Button
-                variant="outlined"
-                className={
-                  !firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"
-                }
-                sx={{ position: "absolute", bottom: "21%", left: "6%" }}
-                onClick={(e) => {
-                  tagList.current.push(nanoid())
-                  setTags([...tagList.current])
-                  setState((prev) => !prev)
-                  setFirstRender(false)
-                }}
-              >
-                Add tag
-              </Button>
             </div>
           </fieldset>
         </div>
@@ -103,6 +86,18 @@ const CreateArticle: React.FC = (): JSX.Element => {
           Send
         </ColorButton>
       </form>
+      <Button
+        variant="outlined"
+        className={!firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"}
+        sx={{ position: "absolute", bottom: "21%" }}
+        onClick={(e) => {
+          tagList.current.push(nanoid())
+          setTags([...tagList.current])
+          setFirstRender(false)
+        }}
+      >
+        Add tag
+      </Button>
     </div>
   )
 }

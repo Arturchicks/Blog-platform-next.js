@@ -35,7 +35,7 @@ body {
 }
 @keyframes transform {
   0% {
-    left: 6%;
+    left: 28px;
   }
   100% {
     left: 50%;
@@ -47,7 +47,7 @@ body {
   }
 
   100% {
-    left: 6%;
+    left: 28px;
   }
 }
 .animate-display {
