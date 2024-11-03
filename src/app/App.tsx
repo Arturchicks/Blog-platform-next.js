@@ -6,7 +6,6 @@ import { Articles } from "pages/Articles"
 import { useGetArticleQuery } from "shared/redux/api"
 
 const App: React.FC = () => {
-  ;("Render App")
   return (
     <div className="flex flex-col gap-5">
       <ErrorBoundary>

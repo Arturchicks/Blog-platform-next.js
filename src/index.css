@@ -10,7 +10,9 @@
 .scrollbar-gutter {
   scrollbar-gutter: stable;
 }
-
+::-webkit-scrollbar {
+  width: 1px;
+}
 html {
   margin: 0;
   padding: 0;
@@ -38,12 +40,12 @@ body {
     left: 28px;
   }
   100% {
-    left: 50%;
+    left: 45%;
   }
 }
 @keyframes transform-back {
   0% {
-    left: 50%;
+    left: 45%;
   }
 
   100% {

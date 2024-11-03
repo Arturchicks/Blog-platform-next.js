@@ -10,7 +10,7 @@ type Params = {
   method: string | undefined
 }
 interface ICount {
-  count: number
+  count: number | null
   liked: boolean
   slug: string
   onToggleLike: (params: Params) => void

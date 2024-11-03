@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from "react"
+import React, { useCallback, useState, useRef, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { ColorButton } from "shared/ui/signButton"
 import { Button, TextField } from "@mui/material"
@@ -16,6 +16,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
   const tagList = useRef<string[]>([])
   const {
     register,
+    unregister,
     handleSubmit,
     resetField,
     formState: { errors },
@@ -34,10 +35,10 @@ const CreateArticle: React.FC = (): JSX.Element => {
     const { title, description, body, tagList } = data
     const res = await create({ article: { title, description, body, tagList } })
     if (res.data) navigate("/articles")
-    console.log(res)
-    console.log(data)
   })
-
+  useEffect(() => {
+    console.log(tags, tagList.current)
+  })
   return (
     <div className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-[28px] animate-display relative">
       <h3 className="text-center font-Roboto">Create new article</h3>
@@ -91,8 +92,8 @@ const CreateArticle: React.FC = (): JSX.Element => {
                 ) : null}
               </label>
               {(tags?.length && (
-                <div className="relative w-[50%]">
-                  <ul className="h-20 flex flex-col gap-2 overflow-auto animate-display scrollbar-gutter">
+                <div className="relative w-[44%]">
+                  <ul className="h-20 flex flex-col gap-2 overflow-auto animate-display scrollbar-gutter w-fit">
                     {tags?.map((e, index) => (
                       <li key={e} className="animate-display relative">
                         <label className="inline-block h-14">
@@ -100,6 +101,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                             delete={handleDelete}
                             key={e}
                             id={e}
+                            unregister={unregister}
                             register={register(`tagList.${index}`)}
                             index={index}
                             error={!!errors.tagList?.[index]}
@@ -120,7 +122,13 @@ const CreateArticle: React.FC = (): JSX.Element => {
             </div>
           </fieldset>
         </div>
-        <ColorButton type="submit" title="Submit" className="w-[200px]" sx={{ position: "absolute", bottom: "20px" }}>
+        <ColorButton
+          type="submit"
+          title="Submit"
+          className="w-[200px]"
+          sx={{ position: "absolute", bottom: "20px" }}
+          onClick={() => console.log(tags)}
+        >
           Send
         </ColorButton>
       </form>
@@ -132,6 +140,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
           tagList.current.push(nanoid())
           setTags([...tagList.current])
           setFirstRender(false)
+          console.log(tagList)
         }}
       >
         Add tag

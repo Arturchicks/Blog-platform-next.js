@@ -15,7 +15,6 @@ export const SignUpForm: React.FC = () => {
   const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
   const { data: user, refetch: refetchCurrentUser, isSuccess: isUserSuccess } = useGetCurrentUserQuery("")
   const navigate = useNavigate()
-  console.log(error)
   const {
     register,
     handleSubmit,

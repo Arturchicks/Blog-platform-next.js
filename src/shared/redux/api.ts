@@ -12,14 +12,15 @@ export const baseApi = createApi({
       return headers
     },
   }),
-  tagTypes: ["Article", "User"],
+  tagTypes: ["Article", "User", "ArticlePage"],
   endpoints: (builder) => ({
-    getArticles: builder.query<QueryArticles, QueryArgs>({
+    getArticles: builder.query({
       query: ({ offset, tag }) => (!tag ? `articles?offset=${offset}` : `articles?tag=${tag}`),
       providesTags: ["Article"],
     }),
     getArticle: builder.query({
       query: (slug) => `articles/${slug}`,
+      providesTags: ["ArticlePage"],
     }),
     loginUser: builder.mutation({
       query: (user) => ({
@@ -37,6 +38,7 @@ export const baseApi = createApi({
         url: `articles/${slug}/favorite`,
         method,
       }),
+      invalidatesTags: ["ArticlePage"],
     }),
     createAccount: builder.mutation<MutationAccount, User>({
       query: (user) => ({
@@ -51,6 +53,7 @@ export const baseApi = createApi({
         method: "POST",
         body: article,
       }),
+      invalidatesTags: ["Article"],
     }),
   }),
 })

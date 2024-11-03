@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState, useRef } from "react"
+import React, { useCallback, useLayoutEffect, useMemo, useState, useRef, useEffect } from "react"
 import { nanoid } from "nanoid"
 import { IArticle } from "../../../entities/article"
 import Article from "../../../entities/article/ui/article/Article"
@@ -12,6 +12,7 @@ export const ArticleList: React.FC = () => {
   const { data, isLoading } = useGetArticlesQuery({ offset: offSet, tag: tag })
   const page = useRef<number>(1)
   const [count, setCount] = useState<number>(0)
+
   const handlePage = useCallback((e: React.ChangeEvent<unknown>, value: number) => {
     setOffSet((value - 1) * 20)
     page.current = value
@@ -25,6 +26,7 @@ export const ArticleList: React.FC = () => {
   const articles = useMemo(() => {
     return data?.articles.map((article: IArticle) => <Article {...article} key={nanoid()} />)
   }, [data])
+
   return (
     <div className="flex flex-col items-center">
       {isLoading && <CircularProgress />}

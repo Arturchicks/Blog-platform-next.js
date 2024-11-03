@@ -4,11 +4,27 @@ import { LoginForm } from "features/sign-in-form"
 import { Articles } from "pages/Articles"
 import { AuthForm } from "features/sign-up-form"
 import CreateArticle from "pages/createArticle/createArticle"
+import { ArticlePage } from "pages/ArticlePage/ui/article-page"
+
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/",
+        element: <Articles />,
+      },
+      {
+        path: "articles",
+        element: <Articles />,
+        children: [
+          {
+            path: "tag/:tag",
+            element: <Articles />,
+          },
+        ],
+      },
       {
         path: "sign-in",
         element: <LoginForm />,
@@ -22,18 +38,8 @@ export const router = createBrowserRouter([
         element: <CreateArticle />,
       },
       {
-        path: "/",
-        element: <Articles />,
-      },
-      {
-        path: "articles",
-        element: <Articles />,
-        children: [
-          {
-            path: ":tag",
-            element: <Articles />,
-          },
-        ],
+        path: "slug/:slug",
+        element: <ArticlePage />,
       },
     ],
   },
