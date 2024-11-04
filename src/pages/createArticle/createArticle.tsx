@@ -1,19 +1,22 @@
 import React, { useCallback, useState, useRef, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { ColorButton } from "shared/ui/signButton"
-import { Button, TextField } from "@mui/material"
+import { Button, TextField, Theme } from "@mui/material"
 import { Tag } from "./ui/tag"
 import { nanoid } from "nanoid"
 import { schema } from "./utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useCreateArticleMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
-
+import Box from "@mui/material/Box"
+import { useTheme } from "@emotion/react"
 const CreateArticle: React.FC = (): JSX.Element => {
   const [tags, setTags] = useState<string[]>([])
   const [firstRender, setFirstRender] = useState<boolean>(true)
   const [create] = useCreateArticleMutation()
   const tagList = useRef<string[]>([])
+  const theme = useTheme() as Theme
+
   const {
     register,
     unregister,
@@ -36,11 +39,12 @@ const CreateArticle: React.FC = (): JSX.Element => {
     const res = await create({ article: { title, description, body, tagList } })
     if (res.data) navigate("/articles")
   })
-  useEffect(() => {
-    console.log(tags, tagList.current)
-  })
+
   return (
-    <div className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-[28px] animate-display relative">
+    <Box
+      className="w-[60vw] h-[80vh] bg-white rounded-lg mx-auto p-[28px] animate-display relative"
+      sx={{ bgcolor: "primary.main", color: "secondary.main" }}
+    >
       <h3 className="text-center font-Roboto">Create new article</h3>
       <form className="flex flex-col gap-5 " id="create-article-form" onSubmit={onSubmit}>
         <div className="flex flex-col gap-12">
@@ -115,37 +119,33 @@ const CreateArticle: React.FC = (): JSX.Element => {
                       </li>
                     ))}
                   </ul>
-                  <div className="absolute bottom-0 left-0 w-full h-10 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                  <Box
+                    className="absolute bottom-0 left-0 w-full h-10 pointer-events-none"
+                    sx={{ backgroundImage: `linear-gradient(to top, ${theme.palette.primary.main}, transparent)` }}
+                  />
                 </div>
               )) ||
                 null}
             </div>
           </fieldset>
         </div>
-        <ColorButton
-          type="submit"
-          title="Submit"
-          className="w-[200px]"
-          sx={{ position: "absolute", bottom: "20px" }}
-          onClick={() => console.log(tags)}
-        >
+        <ColorButton type="submit" title="Submit" className="w-[200px]" sx={{ position: "absolute", bottom: "20px" }}>
           Send
         </ColorButton>
       </form>
       <Button
-        variant="outlined"
+        variant="contained"
         className={!firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"}
         sx={{ position: "absolute", bottom: "21%" }}
         onClick={() => {
           tagList.current.push(nanoid())
           setTags([...tagList.current])
           setFirstRender(false)
-          console.log(tagList)
         }}
       >
         Add tag
       </Button>
-    </div>
+    </Box>
   )
 }
 

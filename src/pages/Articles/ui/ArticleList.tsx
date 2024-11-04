@@ -6,6 +6,7 @@ import { useGetArticlesQuery } from "../../../shared/redux/api"
 import { Pagination } from "@mui/material"
 import { CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
+import Box from "@mui/material/Box"
 export const ArticleList: React.FC = () => {
   const [offSet, setOffSet] = useState<number>(0)
   const { tag } = useParams()
@@ -28,7 +29,7 @@ export const ArticleList: React.FC = () => {
   }, [data])
 
   return (
-    <div className="flex flex-col items-center">
+    <Box className="flex flex-col items-center">
       {isLoading && <CircularProgress />}
       {data && (
         <>
@@ -38,6 +39,6 @@ export const ArticleList: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </Box>
   )
 }

@@ -4,6 +4,9 @@ import { useGetCurrentUserQuery } from "shared/redux/api"
 import { Button } from "@mui/material"
 import { useDispatch } from "react-redux"
 import { baseApi } from "shared/redux/api"
+import Box from "@mui/material/Box"
+import { ThemeProvider, createTheme, useColorScheme } from "@mui/material/styles"
+import { ToggleTheme } from "shared/ui/toggleTheme/ui/toggleTheme"
 const avatar = require("../assets/avatar.png")
 export const AppHeader: React.FC = () => {
   const { data } = useGetCurrentUserQuery("")
@@ -15,16 +18,22 @@ export const AppHeader: React.FC = () => {
     navigate("/")
   }
 
-  ;("Render header")
+  const { mode = "light", setMode } = useColorScheme()
+  // if (!mode) {
+  //   return null
+  // }
   return (
-    <div className="flex h-[80px] items-center justify-between bg-white p-4">
-      <div className="w-[150px] text-black">
+    <Box
+      className="flex p-2 h-[80px] items-center justify-between"
+      sx={{ bgcolor: "primary.main", color: "secondary.main" }}
+    >
+      <Box className="w-[150px]">
         <Link to={"/articles"} onClick={() => dispatch(baseApi.util.invalidateTags(["Article"]))}>
           <span>RealWorld Blog</span>
         </Link>
-      </div>
+      </Box>
       {!data && (
-        <div className="flex gap-4 animate-display">
+        <Box className="flex gap-4 animate-display">
           <Link to={"/sign-in"} className="flex items-center justify-center font-sans text-black">
             Sign In
           </Link>
@@ -34,25 +43,23 @@ export const AppHeader: React.FC = () => {
           >
             Sign Up
           </Link>
-        </div>
+        </Box>
       )}
       {data && (
         <div className="flex gap-5 items-center animate-display">
-          <Link
-            to={"/create-article"}
-            className="p-[0.3em] text-[#52C41A] border border-[#52C41A] rounded flex items-center justify-center hover:opacity-50"
-          >
-            Create article
+          <Link to={"/create-article"}>
+            <Button variant="contained">Create article</Button>
           </Link>
           <div className="flex items-center gap-2">
             <span>{data.user.username}</span>
             <img src={data.user.image || avatar} alt="avatar" className="w-12" />
           </div>
-          <Button variant="outlined" onClick={handleLogOut}>
+          <Button variant="contained" onClick={handleLogOut}>
             Log Out
           </Button>
         </div>
       )}
-    </div>
+      <ToggleTheme setMode={setMode} mode={mode} />
+    </Box>
   )
 }

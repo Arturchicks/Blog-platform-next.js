@@ -7,6 +7,7 @@ import { Tags } from "entities/article/ui/article/ui/tagList"
 import { useGetArticleQuery, useSetLikeMutation } from "shared/redux/api"
 import { CircularProgress } from "@mui/material"
 import { useParams } from "react-router-dom"
+import Box from "@mui/material/Box"
 
 export const ArticlePage: React.FC = (): JSX.Element => {
   const { slug } = useParams()
@@ -17,10 +18,13 @@ export const ArticlePage: React.FC = (): JSX.Element => {
 
   return (
     data && (
-      <div className="h-[85vh] w-[70vw] bg-white rounded-md mx-auto animate-display overflow-x-hidden">
-        <div className="flex flex-col w-[70vw] h-[140px] bg-white rounded-xl p-[10px] pr-[20px] pl-[20px] font-sans animate-display overflow-hidden">
-          <div className="flex w-[100%] justify-between">
-            <div className="flex gap-2">
+      <Box
+        className="h-[85vh] w-[70vw] rounded-md mx-auto animate-display overflow-x-hidden"
+        sx={{ bgcolor: "primary.main", color: "secondary.main" }}
+      >
+        <Box className="flex flex-col w-[70vw] h-[140px] rounded-xl p-[10px] pr-[20px] pl-[20px] font-sans animate-display overflow-hidden">
+          <Box className="flex w-[100%] justify-between">
+            <Box className="flex gap-2">
               <h3 className="text-[#1890FF] text-xl pt-[8px] max-h-9 text-ellipsis overflow-hidden">
                 {data.article.title.length > 20 ? `${formatTitle(data.article.title)}...` : data.article.title}
               </h3>
@@ -30,13 +34,13 @@ export const ArticlePage: React.FC = (): JSX.Element => {
                 slug={data.article.slug}
                 onToggleLike={setLike}
               />
-            </div>
-            <div className="flex h-[46px] gap-2">
-              <div className="flex flex-col text-right">
+            </Box>
+            <Box className="flex h-[46px] gap-2">
+              <Box className="flex flex-col text-right">
                 <span>{data.article.author.username}</span>
-                <span className="text-[#00000080] text-xs">{formatDate(data.article.createdAt)}</span>
-              </div>
-              <div className="w-[46px] rounded-[50%]">
+                <span className="text-xs">{formatDate(data.article.createdAt)}</span>
+              </Box>
+              <Box className="w-[46px] rounded-[50%]">
                 {!load && <CircularProgress />}
                 <img
                   src={data.article.author.image}
@@ -45,18 +49,18 @@ export const ArticlePage: React.FC = (): JSX.Element => {
                   style={{ display: load ? "block" : "none" }}
                   className="w-[46px] rounded-[50%] h-[100%] animate-display"
                 />
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
           <Tags tagList={data.article.tagList} />
-          <div className="mt-[20px] overflow-hidden">
-            <p className="h-[35px] text-[#00000080] text-xs">{data.article.description}</p>
-          </div>
-        </div>
+          <Box className="mt-[20px] overflow-hidden" sx={{ color: "text.primary" }}>
+            <p className="h-[35px] text-xs">{data.article.description}</p>
+          </Box>
+        </Box>
         <section className="p-5">
           <Markdown>{data.article.body}</Markdown>
         </section>
-      </div>
+      </Box>
     )
   )
 }

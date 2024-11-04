@@ -5,7 +5,7 @@ import { formatTitle } from "entities/article/lib/formatTitle"
 import Favorites from "./ui/favorites"
 import { Tags } from "./ui/tagList"
 import { useGetArticleQuery, useSetLikeMutation } from "shared/redux/api"
-import { CircularProgress } from "@mui/material"
+import { Box, CircularProgress } from "@mui/material"
 import { Link, useParams } from "react-router-dom"
 const avatar = require("../../assets/avatar.png")
 
@@ -22,7 +22,10 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
     }
   }, [result])
   return (
-    <div className="flex flex-col w-[70vw] h-[140px] bg-white rounded-xl p-[10px] font-sans animate-display overflow-hidden">
+    <Box
+      className="flex flex-col w-[70vw] h-[140px] rounded-xl p-[10px] font-sans animate-display overflow-hidden"
+      sx={{ bgcolor: "primary.main", color: "secondary.main" }}
+    >
       <div className="flex w-[100%] justify-between">
         <div className="flex gap-2">
           <Link
@@ -36,7 +39,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         <div className="flex h-[46px] gap-2">
           <div className="flex flex-col text-right">
             <span>{props.author.username}</span>
-            <span className="text-[#00000080] text-xs">{formatDate(props.createdAt)}</span>
+            <span className="text-xs">{formatDate(props.createdAt)}</span>
           </div>
           <div className="w-[46px] rounded-[50%]">
             {!load && <CircularProgress />}
@@ -55,7 +58,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
       <div className="mt-[20px] overflow-hidden">
         <p className="h-[25px]">{props.description}</p>
       </div>
-    </div>
+    </Box>
   )
 }
 export default Article

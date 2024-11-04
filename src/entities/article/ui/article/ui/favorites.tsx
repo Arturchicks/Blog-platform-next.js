@@ -26,7 +26,7 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
       <Checkbox
         icon={<FavoriteBorder />}
         checked={props.liked}
-        checkedIcon={<Favorite style={{ color: "red" }} />}
+        checkedIcon={<Favorite color="error" />}
         onClick={handleLike}
         id={props.slug}
       />
