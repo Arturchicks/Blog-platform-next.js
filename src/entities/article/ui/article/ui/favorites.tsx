@@ -1,10 +1,8 @@
-import React, { SetStateAction, useEffect, useState } from "react"
+import React, { useState } from "react"
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
 import Favorite from "@mui/icons-material/Favorite"
-import { Checkbox } from "@mui/material"
-import { nanoid } from "nanoid"
-import { useGetArticlesQuery, useSetLikeMutation } from "shared/redux/api"
-import { memo } from "react"
+import { Box, Checkbox } from "@mui/material"
+
 type Params = {
   slug: string
   method: string | undefined
@@ -22,16 +20,30 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
     props.onToggleLike({ slug: props.slug, method })
   }
   return (
-    <div className="flex gap-1 items-center">
-      <Checkbox
-        icon={<FavoriteBorder />}
-        checked={props.liked}
-        checkedIcon={<Favorite color="error" />}
-        onClick={handleLike}
-        id={props.slug}
-      />
-      <span>{props.count}</span>
-    </div>
+    <Box>
+      <label htmlFor={props.slug}>
+        <Checkbox
+          sx={{
+            color: "text.primary",
+            "&:hover": {
+              backgroundColor: "rgba(25, 118, 210, 0.04)",
+            },
+            "&.Mui-checked": {
+              color: "red",
+            },
+            "&. MuiCheckbox-indeterminate": {
+              color: "red",
+            },
+          }}
+          icon={<FavoriteBorder />}
+          checked={props.liked}
+          checkedIcon={<Favorite color="error" />}
+          onClick={handleLike}
+          id={props.slug}
+        />
+        <span>{props.count}</span>
+      </label>
+    </Box>
   )
 }
 export default Favorites

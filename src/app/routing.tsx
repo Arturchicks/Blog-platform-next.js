@@ -4,7 +4,7 @@ import { LoginForm } from "features/sign-in-form"
 import { Articles } from "pages/Articles"
 import { AuthForm } from "features/sign-up-form"
 import CreateArticle from "pages/createArticle/createArticle"
-import { ArticlePage } from "pages/ArticlePage/ui/article-page"
+import { ArticlePage } from "pages/ArticlePage/article-page"
 
 export const router = createBrowserRouter([
   {

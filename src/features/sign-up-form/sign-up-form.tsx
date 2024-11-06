@@ -8,6 +8,7 @@ import { ColorButton } from "shared/ui/signButton"
 import { Policy } from "./ui/policy"
 import { useCreateAccountMutation, useLoginUserMutation, useGetCurrentUserQuery } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
+import Box from "@mui/material/Box"
 export const SignUpForm: React.FC = () => {
   const [createAccount] = useCreateAccountMutation({
     fixedCacheKey: "test",
@@ -38,7 +39,10 @@ export const SignUpForm: React.FC = () => {
     }
   }, [isLoginSuccess])
   return (
-    <div className="animate-display flex flex-col w-[385px]  rounded-lg bg-white p-8 pb-16 gap-6 self-center">
+    <Box
+      className="animate-display flex flex-col w-[385px]  rounded-l p-8 pb-16 gap-6 self-center"
+      sx={{ bgcolor: "primary.main", color: "text.primary" }}
+    >
       <span className="text-center">Create new account</span>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
         <div className="flex flex-col">
@@ -117,6 +121,6 @@ export const SignUpForm: React.FC = () => {
           Create
         </ColorButton>
       </form>
-    </div>
+    </Box>
   )
 }

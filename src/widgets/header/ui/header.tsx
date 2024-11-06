@@ -34,27 +34,25 @@ export const AppHeader: React.FC = () => {
       </Box>
       {!data && (
         <Box className="flex gap-4 animate-display">
-          <Link to={"/sign-in"} className="flex items-center justify-center font-sans text-black">
+          <Button onClick={() => navigate("/sign-in")} color="info">
             Sign In
-          </Link>
-          <Link
-            to={"/sign-up"}
-            className="flex items-center justify-center  hover:opacity-80 w-[109px] h-[51px] border-solid border-[1px] border-lime-600 rounded text-lime-600 "
-          >
+          </Button>
+          <Button onClick={() => navigate("/sign-up")} color="success" variant="outlined">
             Sign Up
-          </Link>
+          </Button>
         </Box>
       )}
       {data && (
         <div className="flex gap-5 items-center animate-display">
-          <Link to={"/create-article"}>
-            <Button variant="contained">Create article</Button>
-          </Link>
+          <Button variant="outlined" onClick={() => navigate("/create-article")} color="success">
+            Create article
+          </Button>
+
           <div className="flex items-center gap-2">
             <span>{data.user.username}</span>
             <img src={data.user.image || avatar} alt="avatar" className="w-12" />
           </div>
-          <Button variant="contained" onClick={handleLogOut}>
+          <Button variant="outlined" onClick={handleLogOut} color="info">
             Log Out
           </Button>
         </div>

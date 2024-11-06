@@ -55,6 +55,13 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Article"],
     }),
+    deleteArticle: builder.mutation({
+      query: (slug) => ({
+        url: `/articles/${slug}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Article"],
+    }),
   }),
 })
 export const {
@@ -65,4 +72,5 @@ export const {
   useGetCurrentUserQuery,
   useGetArticleQuery,
   useCreateArticleMutation,
+  useDeleteArticleMutation,
 } = baseApi

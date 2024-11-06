@@ -1,0 +1,11 @@
+fix: 
+1. checkbox setFavorite - V
+2: input's borders (sign-in, sign-up, create article) - X
+3: single tag after deleting all - X
+feat: 
+1. add edit-article page - X
+optional:
+1. add webSocket connection - X
+refactor: 
+1. add ts where it needs to be - X
+2: add adaptivity - X

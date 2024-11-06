@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useRef, useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { useForm, useFormState } from "react-hook-form"
 import { ColorButton } from "shared/ui/signButton"
 import { Button, TextField, Theme } from "@mui/material"
 import { Tag } from "./ui/tag"
@@ -10,13 +10,12 @@ import { useCreateArticleMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
 import Box from "@mui/material/Box"
 import { useTheme } from "@emotion/react"
+
 const CreateArticle: React.FC = (): JSX.Element => {
   const [tags, setTags] = useState<string[]>([])
   const [firstRender, setFirstRender] = useState<boolean>(true)
   const [create] = useCreateArticleMutation()
-  const tagList = useRef<string[]>([])
   const theme = useTheme() as Theme
-
   const {
     register,
     unregister,
@@ -28,15 +27,24 @@ const CreateArticle: React.FC = (): JSX.Element => {
   const handleDelete = useCallback(
     (key: string, index: number) => {
       resetField(`tagList.${index}`)
-      tagList.current = tagList.current.filter((e) => e !== key)
-      setTags([...tagList.current])
+      if (tags.length === 1) {
+        unregister("tagList")
+        console.log("length")
+      }
+      setTags((prev) => prev.filter((e) => e !== key))
     },
-    [resetField]
+    [resetField, tags]
   )
+
+  const getRandomId = (index: number) => {
+    return Math.random() * 10 * index
+  }
+
   const navigate = useNavigate()
+
   const onSubmit = handleSubmit(async (data) => {
-    const { title, description, body, tagList } = data
-    const res = await create({ article: { title, description, body, tagList } })
+    console.log(data)
+    const res = await create({ article: data })
     if (res.data) navigate("/articles")
   })
 
@@ -46,7 +54,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <h3 className="text-center font-Roboto">Create new article</h3>
-      <form className="flex flex-col gap-5 " id="create-article-form" onSubmit={onSubmit}>
+      <form className="flex flex-col gap-5" id="create-article-form" onSubmit={onSubmit}>
         <div className="flex flex-col gap-12">
           <fieldset>
             <div className="flex flex-col gap-1">
@@ -56,10 +64,11 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   rows={1}
                   placeholder="Title"
                   id="title"
-                  {...register("title")}
                   size="small"
                   sx={{ width: "100%" }}
                   error={!!errors.title}
+                  autoComplete="off"
+                  {...register("title")}
                 />
                 {errors.title && (
                   <p className="animate-display text-red-500 font-Roboto text-xs">{errors.title.message}</p>
@@ -71,10 +80,11 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   rows={1}
                   placeholder="Description"
                   id="description"
-                  {...register("description")}
                   size="small"
                   sx={{ width: "100%" }}
                   error={!!errors.description}
+                  autoComplete="off"
+                  {...register("description")}
                 />
                 {errors.description ? (
                   <p className="animate-display  text-red-500 font-Roboto text-xs">{errors.description.message}</p>
@@ -87,9 +97,10 @@ const CreateArticle: React.FC = (): JSX.Element => {
                   multiline={true}
                   placeholder="Text"
                   id="body"
-                  {...register("body")}
                   sx={{ width: "100%" }}
                   error={!!errors.body}
+                  autoComplete="off"
+                  {...register("body")}
                 />
                 {errors.body ? (
                   <p className="animate-display text-red-500 font-Roboto text-xs">{errors.body.message}</p>
@@ -106,7 +117,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                             key={e}
                             id={e}
                             unregister={unregister}
-                            register={register(`tagList.${index}`)}
+                            register={register}
                             index={index}
                             error={!!errors.tagList?.[index]}
                           />
@@ -129,7 +140,12 @@ const CreateArticle: React.FC = (): JSX.Element => {
             </div>
           </fieldset>
         </div>
-        <ColorButton type="submit" title="Submit" className="w-[200px]" sx={{ position: "absolute", bottom: "20px" }}>
+        <ColorButton
+          type="submit"
+          className="w-[200px]"
+          sx={{ position: "absolute", bottom: "20px" }}
+          onClick={() => console.log(tags)}
+        >
           Send
         </ColorButton>
       </form>
@@ -138,8 +154,8 @@ const CreateArticle: React.FC = (): JSX.Element => {
         className={!firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"}
         sx={{ position: "absolute", bottom: "21%" }}
         onClick={() => {
-          tagList.current.push(nanoid())
-          setTags([...tagList.current])
+          setTags((prev) => [...prev, nanoid()])
+          console.log(tags)
           setFirstRender(false)
         }}
       >

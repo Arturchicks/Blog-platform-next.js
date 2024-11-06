@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useState, useRef, useEffect } from "react"
+import React, { useCallback, useLayoutEffect, useMemo, useState, useRef } from "react"
 import { nanoid } from "nanoid"
 import { IArticle } from "../../../entities/article"
 import Article from "../../../entities/article/ui/article/Article"

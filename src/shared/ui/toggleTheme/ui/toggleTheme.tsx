@@ -1,13 +1,11 @@
 import React from "react"
 import "../styles/style.css"
-import { set } from "react-hook-form"
 type Mode = "system" | "light" | "dark"
 type Toggle = {
   mode: Mode | undefined
   setMode: (mode: Mode | null) => void
 }
 export const ToggleTheme: React.FC<Toggle> = ({ setMode, mode }: Toggle) => {
-  console.log(mode)
   return (
     <div className="w-20 h-10 absolute top-2 left-32">
       <input
