@@ -1,11 +1,17 @@
 fix: 
 1. checkbox setFavorite - V
 2: input's borders (sign-in, sign-up, create article) - X
-3: single tag after deleting all - X
+3: single tag after deleting all - V
+4: unregister current tag - X
 feat: 
 1. add edit-article page - X
+2: add double touch like(pointers)
+3: add followersList(click on avatar(user info))
 optional:
 1. add webSocket connection - X
 refactor: 
 1. add ts where it needs to be - X
 2: add adaptivity - X
+3: style scrollbar
+4: getArticlesByTag
+5: add circular progress to header while current user is pending(if localstorage.getItem("token"))

@@ -1,13 +1,17 @@
 import React from "react"
 import "../styles/style.css"
+import { useMediaQuery } from "@mui/material"
+import { Box } from "@mui/system"
+import clsx from "clsx"
 type Mode = "system" | "light" | "dark"
 type Toggle = {
   mode: Mode | undefined
   setMode: (mode: Mode | null) => void
 }
 export const ToggleTheme: React.FC<Toggle> = ({ setMode, mode }: Toggle) => {
+  const isMobile = useMediaQuery("(max-width: 540px)")
   return (
-    <div className="w-20 h-10 absolute top-2 left-32">
+    <div className={clsx("w-20 h-10 absolute", isMobile ? "top-[-43px] left-0" : "top-[-21px] left-[120px]")}>
       <input
         type="checkbox"
         id="darkmode-toggle"

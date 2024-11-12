@@ -5,7 +5,7 @@ import Box from "@mui/material/Box"
 export const Policy: React.FC = () => {
   return (
     <div className="flex flex-col">
-      <Box className="w-[100%] h-[1px]" sx={{ border: "1px solid", borderColor: "text.secondary" }} />
+      <Box className="w-[100%] h-[1px]" sx={{ borderTop: "1px solid", borderColor: "text.secondary" }} />
       <label htmlFor="policy" className="flex pt-2">
         <Checkbox
           id="policy"

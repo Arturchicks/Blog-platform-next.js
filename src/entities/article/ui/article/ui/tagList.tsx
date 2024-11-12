@@ -1,27 +1,28 @@
-import React, { ReactEventHandler } from "react"
+import React from "react"
 import { IArticle } from "entities/article/types/types"
 import { nanoid } from "nanoid"
-import { useDispatch } from "react-redux"
-import { baseApi } from "shared/redux/api"
-import { Box } from "@mui/material"
+import { Box, useMediaQuery } from "@mui/material"
 import { Link } from "react-router-dom"
+import clsx from "clsx"
+
 export const Tags: React.FC<Pick<IArticle, "tagList">> = ({ tagList }) => {
-  const dispatch = useDispatch()
-  const handleClick: ReactEventHandler = () => {
-    dispatch(baseApi.util.invalidateTags(["Article"]))
-  }
+  const regex = /[a-zабвгдеёжзийклмнопрстуфхцчшщъыьэюя]/i
+  const isHoverSupported = useMediaQuery("(hover: hover) and (pointer: fine)")
   return (
-    <Box className="flex gap-1">
+    <Box className="flex gap-1 max-w-[100%]">
       {tagList &&
         tagList
           .slice(0, 3)
-          .filter((e) => e.length)
+          .filter((e) => regex.test(e))
           .map((e) => (
-            <Box sx={{ color: "text.primary", borderColor: "secondary.main" }} key={nanoid()}>
+            <Box sx={{ color: "text.primary", borderColor: "secondary.main", maxWidth: "25%" }} key={nanoid()}>
               <Link
                 to={`/articles/tag/${e}`}
-                onClick={handleClick}
-                className="border rounded-[4px] font-sans text-[12px] p-[1px] pl-1 pr-1 hover:opacity-70"
+                className={clsx(
+                  "border rounded-[4px] font-sans text-[12px] p-[1px] pl-1 pr-1 max-w-[100%] whitespace-nowrap",
+                  isHoverSupported && "hover:opacity-70",
+                  "inline-block overflow-hidden text-ellipsis"
+                )}
               >
                 {e}
               </Link>

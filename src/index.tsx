@@ -6,8 +6,9 @@ import { store } from "./shared/redux"
 import { ThemeProvider } from "@mui/material"
 import { theme } from "shared/ui/toggleTheme/theme"
 import "./index.css"
-
+import { CustomFileInput } from "pages/EditUser/ui/customFileInput"
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
+customElements.define("file-input", CustomFileInput)
 root.render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>

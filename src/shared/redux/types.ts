@@ -1,7 +1,7 @@
 import { IArticle } from "../../entities/article"
 
 export interface QueryArticles {
-  articles: IArticle[]
+  articles: Array<IArticle>
   articlesCount: number
 }
 export interface QueryArgs {
@@ -11,7 +11,7 @@ export interface QueryArgs {
 export interface MutationAccount {
   user: {
     username: string
-    email: string
+    email?: string
     token: string
   }
 }
@@ -40,4 +40,20 @@ export interface Author {
 
 export interface Article {
   article: { title: string; description: string; body: string; tagList?: string[] }
+}
+
+export interface State {
+  onchanged: boolean
+}
+
+export interface Params {
+  slug: string
+  method: string | undefined
+}
+
+export interface MutationLike {
+  article: MutationArticle
+}
+export interface QueryUser {
+  user: { username: string; email: string; token: string; image?: string }
 }

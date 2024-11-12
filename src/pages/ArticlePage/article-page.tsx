@@ -6,7 +6,7 @@ import Favorites from "entities/article/ui/article/ui/favorites"
 import { Tags } from "entities/article/ui/article/ui/tagList"
 import type { PopconfirmProps } from "antd"
 import { CustomConfirm } from "./ui/popconfirm"
-import { Button as Btn, message, Popconfirm } from "antd"
+import { Button as Btn, message } from "antd"
 import {
   useGetArticleQuery,
   useGetCurrentUserQuery,
@@ -20,12 +20,11 @@ import { useTheme } from "@emotion/react"
 export const ArticlePage: React.FC = (): JSX.Element => {
   const { slug } = useParams()
   const { data } = useGetArticleQuery(slug)
-  const { data: userData } = useGetCurrentUserQuery("")
+  const { data: userData } = useGetCurrentUserQuery(null)
   const [load, setLoad] = useState<boolean>(false)
-  const [setLike, result] = useSetLikeMutation()
-  const [del, res] = useDeleteArticleMutation()
+  const [setLike] = useSetLikeMutation()
+  const [del] = useDeleteArticleMutation()
   const theme = useTheme() as Theme
-  // const [image, setImage] = useState(data.author.image)
   const navigate = useNavigate()
   const handleDelete = async () => {
     await del(slug)
@@ -39,16 +38,17 @@ export const ArticlePage: React.FC = (): JSX.Element => {
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e)
   }
+
   return (
     data && (
       <Box
-        className="max-h-[85vh] w-[70vw] rounded-md mx-auto animate-display overflow-x-hidden relative"
+        className="max-h-[85vh] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden relative"
         sx={{ bgcolor: "primary.main", color: "secondary.main" }}
       >
-        <Box className="flex flex-col w-[70vw] gap-2 rounded-xl p-[10px] pr-[20px] pl-[20px] font-sans animate-display overflow-hidden">
+        <Box className="flex flex-col rounded-xl xs:p-[2vw] sm:p-3 font-sans animate-display overflow-hidden">
           <Box className="flex w-[100%] justify-between">
-            <Box className="flex gap-2">
-              <h3 className="text-[#1890FF] text-xl pt-[8px] max-h-9 text-ellipsis overflow-hidden">
+            <Box className="flex max-w-[60%] items-center sm:w-auto">
+              <h3 className="text-[#1890FF] text-xl inline-block s:whitespace-nowrap text-clamp-xl max-h-[100%] max-w-[100%] text-ellipsis overflow-hidden">
                 {data.article.title.length > 20 ? `${formatTitle(data.article.title)}...` : data.article.title}
               </h3>
               <Favorites
@@ -56,51 +56,61 @@ export const ArticlePage: React.FC = (): JSX.Element => {
                 liked={data.article.favorited}
                 slug={data.article.slug}
                 onToggleLike={setLike}
+                className="inline-block min-w-3 text-clamp"
               />
             </Box>
-            <Box className="flex h-[46px] gap-2">
-              <Box className="flex flex-col text-right">
-                <span>{data.article.author.username}</span>
-                <span className="text-xs">{formatDate(data.article.createdAt)}</span>
+            <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%]">
+              <Box className="flex flex-col text-right w-[80%] justify-center overflow-hidden">
+                <Box className="overflow-hidden text-ellipsis" sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}>
+                  {data.article.author.username}
+                </Box>
+                <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>
+                  {formatDate(data.article.createdAt)}
+                </Box>
               </Box>
-              <Box className="w-[46px] rounded-[50%]">
-                {!load && <CircularProgress />}
+              <div className="w-[46px] h-[46px]">
+                {!load && <CircularProgress color="info" />}
                 <img
                   src={data.article.author.image}
                   onLoad={() => setLoad(true)}
                   alt="avatar"
                   style={{ display: load ? "block" : "none" }}
-                  className="w-[46px] rounded-[50%] h-[100%] animate-display"
+                  className="w-12 rounded-[50%] animate-display min-w-[46px] min-h-[46px]"
                 />
-              </Box>
+              </div>
             </Box>
           </Box>
-          <Tags tagList={data.article.tagList} />
+          {(data.article.tagList.length && <Tags tagList={data.article.tagList} />) || null}
           <Box
-            className="mt-[20px] overflow-hidden"
+            className="overflow-hidden"
             sx={{ color: "text.primary", display: "flex", gap: "1em", justifyContent: "space-between" }}
           >
-            <p className="h-[35px] text-xs">{data.article.description}</p>
-            {data.article.author.username === userData?.user.username && (
-              <Box sx={{ display: "flex", gap: "8px", position: "absolute", right: "20px" }}>
-                <CustomConfirm
-                  title="Delete the task"
-                  description="Are you sure to delete this task?"
-                  onConfirm={confirm}
-                  onCancel={cancel}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  <Btn danger style={{ backgroundColor: `${theme.palette.primary.main}` }}>
-                    Delete
-                  </Btn>
-                </CustomConfirm>
-                <Btn style={{ backgroundColor: `${theme.palette.primary.main}` }}>Edit</Btn>
-              </Box>
-            )}
+            <p className="text-xs text-clamp">{data.article.description}</p>
           </Box>
+          {data.article.author.username === userData?.user.username && (
+            <Box sx={{ display: "flex", gap: "8px", justifyContent: "end" }}>
+              <CustomConfirm
+                title="Delete the task"
+                description="Are you sure to delete this task?"
+                onConfirm={confirm}
+                onCancel={cancel}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Btn danger style={{ backgroundColor: `${theme.palette.primary.main}` }}>
+                  Delete
+                </Btn>
+              </CustomConfirm>
+              <Btn
+                style={{ backgroundColor: `${theme.palette.primary.main}` }}
+                className="!text-green-500 border-green-500 hover:!border-green-300 hover:!text-green-400"
+              >
+                Edit
+              </Btn>
+            </Box>
+          )}
         </Box>
-        <section className="p-5">
+        <section className="p-[2vw] sm:p-3 break-words text-clamp">
           <Markdown>{data.article.body}</Markdown>
         </section>
       </Box>

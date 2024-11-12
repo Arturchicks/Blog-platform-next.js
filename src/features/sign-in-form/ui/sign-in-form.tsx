@@ -7,11 +7,10 @@ import { Box, TextField } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { useGetCurrentUserQuery, useLoginUserMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
-import { BooleanArraySupportOption } from "prettier"
 
 export const SignInForm: React.FC = (): JSX.Element => {
-  const [login, { isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
-  const { refetch: refetchCurrentUser } = useGetCurrentUserQuery("", { skip: !isLoginSuccess })
+  const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
+  const { refetch: refetchCurrentUser } = useGetCurrentUserQuery(null)
   const [serverError, setServerError] = useState<boolean>(false)
   const navigate = useNavigate()
   const {
@@ -23,22 +22,25 @@ export const SignInForm: React.FC = (): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const { email, password } = data
-      const res = await login({ user: { email, password } })
-      if (res.error) setServerError(true)
-      if (res.data) localStorage.setItem("token", res.data.user.token)
+      await login({ user: { email, password } })
     } catch (e) {
-      e
+      console.log(e)
     }
   })
   useEffect(() => {
     if (isLoginSuccess) {
-      refetchCurrentUser()
+      localStorage.setItem("token", userData.user.token)
+      try {
+        refetchCurrentUser()
+      } catch (e) {
+        console.log(e)
+      }
       navigate("/")
-    }
-  }, [refetchCurrentUser, isLoginSuccess, navigate])
+    } else if (error) setServerError(true)
+  }, [refetchCurrentUser, navigate, isLoginSuccess, error])
   return (
     <Box
-      className="animate-display flex flex-col w-[385px] rounded-lg p-8 gap-6 self-center"
+      className="animate-display flex flex-col xs:w-[286px] sm:w-[385px] rounded-lg p-8 gap-6 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <span className="text-center">Sign In</span>
@@ -55,7 +57,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
               error={!!errors.email || !!serverError}
             />
             {errors.email || error ? (
-              <p className="animate-display absolute bottom-0  text-red-500 font-Roboto text-xs">
+              <p className="animate-display text-red-500 font-Roboto text-[12px]">
                 {errors.email ? errors.email?.message : serverError ? "Invalid email or password" : null}
               </p>
             ) : null}
@@ -71,9 +73,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
               error={!!errors.password || !!serverError}
             />
             {errors.password ? (
-              <p className="animate-display absolute bottom-0 text-red-500 font-Roboto text-xs">
-                {errors.password.message}
-              </p>
+              <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.password.message}</p>
             ) : null}
           </label>
         </div>

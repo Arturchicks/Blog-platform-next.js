@@ -1,6 +1,7 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { QueryArticles, QueryArgs, MutationAccount, User, MutationArticle, Article } from "./types"
-
+import { createApi, fetchBaseQuery, RootState } from "@reduxjs/toolkit/query/react"
+import { MutationAccount, User, MutationArticle, Article, QueryArticles, MutationLike, QueryUser } from "./types"
+import { QueryArgs } from "./types"
+import { Params } from "./types"
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
@@ -14,13 +15,17 @@ export const baseApi = createApi({
   }),
   tagTypes: ["Article", "User", "ArticlePage"],
   endpoints: (builder) => ({
-    getArticles: builder.query({
+    getArticles: builder.query<QueryArticles, QueryArgs>({
       query: ({ offset, tag }) => (!tag ? `articles?offset=${offset}` : `articles?tag=${tag}`),
       providesTags: ["Article"],
     }),
     getArticle: builder.query({
       query: (slug) => `articles/${slug}`,
       providesTags: ["ArticlePage"],
+    }),
+    getCurrentUser: builder.query<QueryUser, null>({
+      query: (arg: null) => "/user",
+      providesTags: ["User"],
     }),
     loginUser: builder.mutation({
       query: (user) => ({
@@ -30,10 +35,7 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Article"],
     }),
-    getCurrentUser: builder.query({
-      query: () => "/user",
-    }),
-    setLike: builder.mutation({
+    setLike: builder.mutation<MutationLike, Params>({
       query: ({ slug, method }) => ({
         url: `articles/${slug}/favorite`,
         method,
@@ -46,6 +48,14 @@ export const baseApi = createApi({
         method: "POST",
         body: user,
       }),
+    }),
+    editProfile: builder.mutation({
+      query: (user) => ({
+        url: "/user",
+        method: "PUT",
+        body: user,
+      }),
+      invalidatesTags: ["User"],
     }),
     createArticle: builder.mutation<MutationArticle, Article>({
       query: (article) => ({
@@ -73,4 +83,5 @@ export const {
   useGetArticleQuery,
   useCreateArticleMutation,
   useDeleteArticleMutation,
+  useEditProfileMutation,
 } = baseApi

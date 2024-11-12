@@ -1,4 +1,5 @@
-import { createTheme } from "@mui/material/styles"
+import { createTheme, Theme } from "@mui/material/styles"
+
 export const theme = createTheme({
   colorSchemes: {
     dark: {
@@ -13,7 +14,7 @@ export const theme = createTheme({
           default: "rgba(19, 20, 21, 1)",
         },
         text: {
-          primary: "rgba(255, 255, 255, 255)",
+          primary: "#b4b6ba",
           secondary: "rgba(232, 232, 232, 1)",
         },
       },
@@ -32,6 +33,29 @@ export const theme = createTheme({
         text: {
           primary: "rgba(0, 0, 0, 0.5)",
           secondary: "rgba(232, 232, 232, 1)",
+        },
+      },
+    },
+  },
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        input: {
+          "&[aria-invalid='false']": {
+            "&:focus-within:not(.MuiInputBase-inputMultiline)": {
+              outline: "2px solid #1890FF",
+              borderRadius: "4px",
+            },
+          },
+          "&:-webkit-autofill": {
+            boxShadow: (theme: Theme) => `0 0 0 100px ${theme.palette.primary.main} inset`,
+          },
+        },
+        root: {
+          "&:not(.Mui-error):focus-within": {
+            outline: "2px solid #1890FF",
+            borderRadius: "4px",
+          },
         },
       },
     },

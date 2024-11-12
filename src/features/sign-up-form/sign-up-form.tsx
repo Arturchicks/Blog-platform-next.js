@@ -9,12 +9,13 @@ import { Policy } from "./ui/policy"
 import { useCreateAccountMutation, useLoginUserMutation, useGetCurrentUserQuery } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
 import Box from "@mui/material/Box"
+import { ErrorMessage } from "./ui/error"
 export const SignUpForm: React.FC = () => {
   const [createAccount] = useCreateAccountMutation({
     fixedCacheKey: "test",
   })
   const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
-  const { data: user, refetch: refetchCurrentUser, isSuccess: isUserSuccess } = useGetCurrentUserQuery("")
+  const { data: user, refetch: refetchCurrentUser, isSuccess: isUserSuccess } = useGetCurrentUserQuery(null)
   const navigate = useNavigate()
   const {
     register,
@@ -34,19 +35,19 @@ export const SignUpForm: React.FC = () => {
   useEffect(() => {
     if (isLoginSuccess) {
       localStorage.setItem("token", userData?.user.token)
-      refetchCurrentUser().then((value) => value)
+      refetchCurrentUser()
       navigate("/")
     }
   }, [isLoginSuccess])
   return (
     <Box
       className="animate-display flex flex-col w-[385px]  rounded-l p-8 pb-16 gap-6 self-center"
-      sx={{ bgcolor: "primary.main", color: "text.primary" }}
+      sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <span className="text-center">Create new account</span>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
-        <div className="flex flex-col">
-          <label htmlFor="username-input" className="flex flex-col relative h-[85px]">
+        <div className="flex flex-col gap-6">
+          <label htmlFor="username-input" className="flex flex-col relative">
             Username
             <TextField
               {...register("username")}
@@ -57,13 +58,9 @@ export const SignUpForm: React.FC = () => {
               size="small"
               error={!!errors.username}
             />
-            {errors.username ? (
-              <p className="animate-display absolute bottom-1  text-red-500 font-Roboto text-xs">
-                {errors.username.message}
-              </p>
-            ) : null}
+            {errors.username && <ErrorMessage message={errors.username.message} />}
           </label>
-          <label htmlFor="email-input" className="flex flex-col relative h-[85px]">
+          <label htmlFor="email-input" className="flex flex-col relative">
             Email adress
             <TextField
               {...register("email")}
@@ -74,13 +71,9 @@ export const SignUpForm: React.FC = () => {
               id="email-input"
               error={!!errors.email}
             />
-            {errors.email ? (
-              <p className="animate-display absolute bottom-1  text-red-500 font-Roboto  text-xs">
-                {errors.email.message}
-              </p>
-            ) : null}
+            {errors.email && <ErrorMessage message={errors.email.message} />}
           </label>
-          <label htmlFor="password-input" className="flex flex-col relative h-[85px]">
+          <label htmlFor="password-input" className="flex flex-col relative">
             Password
             <TextField
               {...register("password")}
@@ -91,13 +84,9 @@ export const SignUpForm: React.FC = () => {
               name="password"
               error={!!errors.password}
             />
-            {errors.password ? (
-              <p className="animate-display absolute bottom-1 text-red-500 font-Roboto  text-xs">
-                {errors.password.message}
-              </p>
-            ) : null}
+            {errors.password && <ErrorMessage message={errors.password.message} />}
           </label>
-          <label htmlFor="repeat-input" className="flex flex-col relative h-[85px]">
+          <label htmlFor="repeat-input" className="flex flex-col relative">
             Repeat password
             <TextField
               {...register("repeat")}
@@ -106,17 +95,12 @@ export const SignUpForm: React.FC = () => {
               id="repeat-input"
               type="password"
               autoComplete="true"
-              name="repeat"
               error={!!errors.repeat}
             />
-            {errors.password ? (
-              <p className="animate-display absolute bottom-1 text-red-500 font-Roboto  text-xs">
-                {errors.repeat?.message}
-              </p>
-            ) : null}
+            {errors.repeat && <ErrorMessage message={errors.repeat.message} />}
           </label>
-          <Policy />
         </div>
+        <Policy />
         <ColorButton variant="contained" className="h-11" type="submit">
           Create
         </ColorButton>
