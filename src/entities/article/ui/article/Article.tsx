@@ -68,11 +68,16 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
             className="inline-block min-w-3 text-clamp pb-[2px]"
           />
         </div>
-        <div className="flex xs:gap-1 sm:gap-2">
-          <div className="flex flex-col text-right justify-center">
-            <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}>{props.author.username}</Box>
+        <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%]">
+          <Box
+            sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}
+            className="flex flex-col text-right w-[80%] justify-center overflow-hidden"
+          >
+            <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
+              {props.author.username}
+            </Box>
             <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>{formatDate(props.createdAt)}</Box>
-          </div>
+          </Box>
           <div className="w-[46px] rounded-[50%]">
             {!load && <CircularProgress color="info" />}
             <img
@@ -83,7 +88,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
               className="min-w-9 w-[46px] h-[46px] rounded-[50%] animate-display"
             />
           </div>
-        </div>
+        </Box>
       </Box>
       <Tags tagList={props.tagList} />
       <div className="overflow-hidden">
