@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { IArticle } from "../../types/types"
 import { formatDate } from "../../lib/formatDate"
 import { formatTitle } from "entities/article/lib/formatTitle"
@@ -6,8 +6,10 @@ import Favorites from "./ui/favorites"
 import { Tags } from "./ui/tagList"
 import { useSetLikeMutation } from "shared/redux/api"
 import { Box, CircularProgress, useMediaQuery } from "@mui/material"
-import { Link, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
+
+const avatar = require("./../../assets/avatar.png")
 
 const Article: React.FC<IArticle> = (props: IArticle) => {
   const [image, setImage] = useState(props.author.image)
@@ -17,6 +19,13 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
   const [setLike, result] = useSetLikeMutation()
   const navigate = useNavigate()
   const isPointer = useMediaQuery("(pointer: fine)")
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!load) setImage(avatar)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [load])
 
   useEffect(() => {
     if (result.isSuccess) {

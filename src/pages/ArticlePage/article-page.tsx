@@ -1,5 +1,5 @@
 import Markdown from "react-markdown"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { formatDate } from "entities/article/lib/formatDate"
 import { formatTitle } from "entities/article/lib/formatTitle"
 import Favorites from "entities/article/ui/article/ui/favorites"
@@ -17,11 +17,14 @@ import { CircularProgress, Theme, Box } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import { useTheme } from "@emotion/react"
 
+const avatar = require("../../shared/assets/avatar.png")
+
 export const ArticlePage: React.FC = (): JSX.Element => {
   const { slug } = useParams()
   const { data } = useGetArticleQuery(slug)
   const { data: userData } = useGetCurrentUserQuery(null)
   const [load, setLoad] = useState<boolean>(false)
+  const [image, setImage] = useState<string>(data?.article.author.image)
   const [setLike] = useSetLikeMutation()
   const [del] = useDeleteArticleMutation()
   const theme = useTheme() as Theme
@@ -38,6 +41,16 @@ export const ArticlePage: React.FC = (): JSX.Element => {
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e)
   }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!load) setImage(avatar)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [load])
+
+  useEffect(() => {
+    if (data?.article.author.image) setImage(data.article.author.image)
+  }, [data])
 
   return (
     data && (
@@ -71,7 +84,7 @@ export const ArticlePage: React.FC = (): JSX.Element => {
               <div className="w-[46px] h-[46px]">
                 {!load && <CircularProgress color="info" />}
                 <img
-                  src={data.article.author.image}
+                  src={image}
                   onLoad={() => setLoad(true)}
                   alt="avatar"
                   style={{ display: load ? "block" : "none" }}
