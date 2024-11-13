@@ -90,5 +90,4 @@
     "*.{js,jsx,ts,tsx}": "npm run lint",
     "*.{js,jsx,ts,tsx,css,scss,md}": "npm run format"
   }
-
 }
