@@ -9,7 +9,7 @@ import { Box, CircularProgress, useMediaQuery } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 
-const avatar = require("./../../assets/avatar.png")
+const avatar = require("../../../../shared/assets/avatar.png")
 
 const Article: React.FC<IArticle> = (props: IArticle) => {
   const [image, setImage] = useState(props.author.image)
