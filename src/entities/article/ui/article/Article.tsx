@@ -85,7 +85,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
               onLoad={() => setLoad(true)}
               alt="avatar"
               style={{ display: load ? "block" : "none" }}
-              className="min-w-9 w-[46px] h-[46px] rounded-[50%] animate-display"
+              className="min-w-[46px] w-[46px] h-[46px] rounded-[50%] animate-display"
             />
           </div>
         </Box>
