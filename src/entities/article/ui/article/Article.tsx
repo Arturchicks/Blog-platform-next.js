@@ -78,7 +78,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
             </Box>
             <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>{formatDate(props.createdAt)}</Box>
           </Box>
-          <div className="w-[46px] rounded-[50%]">
+          <div className="min-w-[46px] rounded-[50%]">
             {!load && <CircularProgress color="info" />}
             <img
               src={image}
