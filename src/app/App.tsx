@@ -10,7 +10,6 @@ const App: React.FC = () => {
       <ErrorBoundary>
         <Header />
         <Outlet />
-        <div></div>
       </ErrorBoundary>
     </Box>
   )
