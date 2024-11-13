@@ -7,9 +7,10 @@ import { Box, TextField } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { useGetCurrentUserQuery, useLoginUserMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
+import { ErrorMessage } from "shared/ui/error"
 
 export const SignInForm: React.FC = (): JSX.Element => {
-  const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
+  const [login] = useLoginUserMutation({ fixedCacheKey: "login" })
   const { refetch: refetchCurrentUser } = useGetCurrentUserQuery(null)
   const [serverError, setServerError] = useState<boolean>(false)
   const navigate = useNavigate()
@@ -22,31 +23,32 @@ export const SignInForm: React.FC = (): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       const { email, password } = data
-      await login({ user: { email, password } })
+      const { data: userData, error } = await login({ user: { email, password } })
+      if (userData) {
+        localStorage.setItem("token", userData.user.token)
+        try {
+          refetchCurrentUser()
+        } catch (e) {
+          console.log(e)
+        }
+        navigate("/")
+      } else if (error) {
+        setServerError(true)
+      }
     } catch (e) {
       console.log(e)
     }
   })
-  useEffect(() => {
-    if (isLoginSuccess) {
-      localStorage.setItem("token", userData.user.token)
-      try {
-        refetchCurrentUser()
-      } catch (e) {
-        console.log(e)
-      }
-      navigate("/")
-    } else if (error) setServerError(true)
-  }, [refetchCurrentUser, navigate, isLoginSuccess, error])
+
   return (
     <Box
-      className="animate-display flex flex-col xs:w-[286px] sm:w-[385px] rounded-lg p-8 gap-6 self-center"
+      className="animate-display flex flex-col xs:w-[286px] sm:w-[385px] rounded-lg p-8 gap-4 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <span className="text-center">Sign In</span>
       <form className="flex flex-col gap-7" onSubmit={onSubmit}>
-        <div className="flex flex-col">
-          <label htmlFor="email" className="flex flex-col relative h-[85px]">
+        <div className="flex flex-col gap-4">
+          <label htmlFor="email" className="flex flex-col relative">
             Email adress
             <TextField
               {...register("email")}
@@ -56,13 +58,13 @@ export const SignInForm: React.FC = (): JSX.Element => {
               size="small"
               error={!!errors.email || !!serverError}
             />
-            {errors.email || error ? (
-              <p className="animate-display text-red-500 font-Roboto text-[12px]">
-                {errors.email ? errors.email?.message : serverError ? "Invalid email or password" : null}
-              </p>
+            {errors.email || serverError ? (
+              <ErrorMessage
+                message={errors.email ? errors.email?.message : serverError ? "Invalid email or password" : null}
+              />
             ) : null}
           </label>
-          <label htmlFor="password-input" className="flex flex-col relative h-[85px]">
+          <label htmlFor="password-input" className="flex flex-col relative">
             Password
             <TextField
               {...register("password")}
@@ -72,9 +74,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
               id="password-input"
               error={!!errors.password || !!serverError}
             />
-            {errors.password ? (
-              <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.password.message}</p>
-            ) : null}
+            {errors.password && <ErrorMessage message={errors.password.message} />}
           </label>
         </div>
         <ColorButton variant="contained" className="h-11" type="submit">

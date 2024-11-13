@@ -9,7 +9,7 @@ import { Policy } from "./ui/policy"
 import { useCreateAccountMutation, useLoginUserMutation, useGetCurrentUserQuery } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
 import Box from "@mui/material/Box"
-import { ErrorMessage } from "./ui/error"
+import { ErrorMessage } from "../../shared/ui/error"
 export const SignUpForm: React.FC = () => {
   const [createAccount] = useCreateAccountMutation({
     fixedCacheKey: "test",
@@ -17,6 +17,7 @@ export const SignUpForm: React.FC = () => {
   const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
   const { data: user, refetch: refetchCurrentUser, isSuccess: isUserSuccess } = useGetCurrentUserQuery(null)
   const navigate = useNavigate()
+  const [terms, setTerms] = useState<boolean | string>("first")
   const {
     register,
     handleSubmit,
@@ -24,11 +25,15 @@ export const SignUpForm: React.FC = () => {
   } = useForm<ISignUp>({ resolver: yupResolver(schema) })
   const onSubmit = handleSubmit(async (data) => {
     const { username, email, password } = data
-    try {
-      await createAccount({ user: { username, email, password } })
-      await login({ user: { email, password } })
-    } catch (e) {
-      console.log(e)
+    if (typeof terms !== "string" && terms) {
+      try {
+        await createAccount({ user: { username, email, password } })
+        await login({ user: { email, password } })
+      } catch (e) {
+        console.log(e)
+      }
+    } else {
+      setTerms(false)
     }
   })
 
@@ -41,7 +46,7 @@ export const SignUpForm: React.FC = () => {
   }, [isLoginSuccess])
   return (
     <Box
-      className="animate-display flex flex-col w-[385px]  rounded-l p-8 pb-16 gap-6 self-center"
+      className="animate-display flex flex-col xs:w-[90vw] sx:w-[385px]  rounded-[5px] p-8 pb-16 gap-6 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <span className="text-center">Create new account</span>
@@ -100,7 +105,7 @@ export const SignUpForm: React.FC = () => {
             {errors.repeat && <ErrorMessage message={errors.repeat.message} />}
           </label>
         </div>
-        <Policy />
+        <Policy agreeTerms={setTerms} terms={terms} />
         <ColorButton variant="contained" className="h-11" type="submit">
           Create
         </ColorButton>

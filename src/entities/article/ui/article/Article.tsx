@@ -9,8 +9,6 @@ import { Box, CircularProgress, useMediaQuery } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import clsx from "clsx"
 
-const avatar = require("../../assets/avatar.png")
-
 const Article: React.FC<IArticle> = (props: IArticle) => {
   const [image, setImage] = useState(props.author.image)
   const [favorited, setFavorited] = useState<boolean>(props.favorited)
@@ -70,11 +68,10 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
             {!load && <CircularProgress color="info" />}
             <img
               src={image}
-              onError={() => setImage(avatar)}
               onLoad={() => setLoad(true)}
               alt="avatar"
               style={{ display: load ? "block" : "none" }}
-              className="min-w-9 w-[46px] rounded-[50%] h-[100%] animate-display"
+              className="min-w-9 w-[46px] h-[46px] rounded-[50%] animate-display"
             />
           </div>
         </div>
