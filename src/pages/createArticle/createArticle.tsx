@@ -1,136 +1,120 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { FieldValues, useFieldArray, useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 import { ColorButton } from "shared/ui/signButton"
-import { Button, TextField, Theme, useMediaQuery } from "@mui/material"
-import { Tag } from "./ui/tag"
+import { Button, Theme, useMediaQuery } from "@mui/material"
 import { schema } from "./utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useCreateArticleMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
 import Box from "@mui/material/Box"
 import { useTheme } from "@emotion/react"
-import { TFieldValues } from "./types/types"
+import { Tags, TFieldValues } from "./types/types"
 import clsx from "clsx"
+import { FormField } from "shared/ui/form-field/form-field"
+import { ErrorMessage } from "shared/ui/error"
+import { Tag } from "./ui/tag"
 
 const CreateArticle: React.FC = (): JSX.Element => {
-  const [tags, setTags] = useState<string[]>([])
   const [firstRender, setFirstRender] = useState<boolean>(true)
   const [create] = useCreateArticleMutation()
   const theme = useTheme() as Theme
   const isMobile = useMediaQuery("(max-width: 480px)")
-  const randomId = () => {
-    return (Math.random() * 10 * new Date().getTime()).toFixed(0)
-  }
   const {
     register,
-    unregister,
     handleSubmit,
-    resetField,
-    getValues,
     formState: { errors },
   } = useForm<TFieldValues>({ resolver: yupResolver(schema) })
-  const { control } = useForm<Tags>()
-  type Tags = {
-    tags: { tag: string }[]
-  }
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray<Tags>({ name: "tags", control })
-  const handleDelete = useCallback(
-    (key: string, index: number) => {
-      // resetField(`tags.${+key}`)
-      // unregister(`tagList.${+key}`)
-      console.log(fields)
-      setTags((prev) => prev.filter((e) => e !== key))
-    },
-    [resetField, tags]
-  )
+
+  const {
+    control,
+    formState: { errors: tagErrors },
+    handleSubmit: handleTagSubmit,
+  } = useForm<Tags>()
+  console.log(tagErrors)
+  const { fields, append, remove } = useFieldArray<Tags>({
+    name: "tags",
+    control,
+  })
 
   const navigate = useNavigate()
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log(errors)
+  const onFormSubmit = handleSubmit(async (data) => {
+    console.log(data)
     const res = await create({ article: data })
     if (res.data) navigate("/articles")
   })
+  const onTagSubmit = handleTagSubmit((data) => {
+    console.log(data)
+    console.log(tagErrors)
+  })
+  const onSubmit = handleSubmit(async (data) => {
+    console.log(data)
+    const res = await create({ article: data })
+    if (res.data) navigate("/articles")
+  })
+
   useEffect(() => {
     if (isMobile) {
-      document.documentElement.style.setProperty("--width", "70px")
+      document.documentElement.style.setProperty("--width", "77.83px")
     } else {
       document.documentElement.style.setProperty("--width", "86px")
     }
   }, [isMobile])
+
   return (
     <Box
       className="xs:w-[80vw] sm:w-[60vw] bg-white rounded-lg mx-auto p-[28px] animate-display relative"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <h3 className="text-center font-Roboto">Create new article</h3>
-      <form className="flex flex-col gap-5 relative" id="create-article-form" onSubmit={onSubmit}>
+      <form
+        className="flex flex-col gap-5 relative"
+        id="create-article-form"
+        onSubmit={(data) => {
+          data.preventDefault()
+          onTagSubmit(data)
+        }}
+      >
         <div className="flex flex-col gap-12">
           <fieldset>
-            <div className="flex flex-col gap-1 text-[12px]">
-              <label htmlFor="title" className="h-20">
-                <Box sx={{ marginBottom: "4px", fontSize: "14px" }}>Title</Box>
-                <TextField
-                  rows={1}
-                  placeholder="Title"
-                  id="title"
-                  size="small"
-                  className="w-[100%]"
-                  error={!!errors.title}
-                  autoComplete="off"
-                  {...register("title")}
-                />
-                {errors.title && <p className="animate-display text-red-500 font-Roboto">{errors.title.message}</p>}
-              </label>
-              <label htmlFor="description" className="relative  h-20">
-                <Box sx={{ marginBottom: "4px", fontSize: "14px" }}>Description</Box>
-                <TextField
-                  rows={1}
-                  placeholder="Description"
-                  id="description"
-                  size="small"
-                  className="w-[100%]"
-                  error={!!errors.description}
-                  autoComplete="off"
-                  {...register("description")}
-                />
-                {errors.description ? (
-                  <p className="animate-display  text-red-500 font-Roboto">{errors.description.message}</p>
-                ) : null}
-              </label>
-              <label htmlFor="text" className="relative ">
-                <Box sx={{ marginBottom: "4px", fontSize: "14px" }}>Text</Box>
-                <TextField
-                  rows={isMobile ? 5 : 7}
-                  multiline={true}
-                  placeholder="Text"
-                  id="body"
-                  className="w-[100%]"
-                  error={!!errors.body}
-                  autoComplete="off"
-                  {...register("body")}
-                />
-                {errors.body ? <p className="animate-display text-red-500 font-Roboto">{errors.body.message}</p> : null}
-              </label>
+            <div className="flex flex-col gap-3 text-[12px]">
+              <FormField
+                rows={1}
+                placeholder="Title"
+                id="title"
+                error={!!errors.title}
+                errors={errors.title}
+                register={register}
+                name="title"
+              />
+              <FormField
+                rows={1}
+                placeholder="Description"
+                id="description"
+                error={!!errors.description}
+                errors={errors.description}
+                register={register}
+                name="description"
+              />
+              <FormField
+                multiline={true}
+                rows={isMobile ? 5 : 7}
+                placeholder="Text"
+                id="body"
+                error={!!errors.body}
+                errors={errors.body}
+                register={register}
+                name="body"
+              />
               <div className="w-[100%]">
                 <ul className="h-20 flex flex-col gap-2 overflow-auto animate-display scrollbar-gutter w-fit max-w-[60%]">
-                  {tags?.map((e, index) => (
-                    <li key={e} className="animate-display relative">
-                      <label className="inline-block h-[3.75rem]">
-                        <Tag
-                          delete={handleDelete}
-                          key={e}
-                          id={e}
-                          unregister={unregister}
-                          register={register}
-                          index={index}
-                          error={false}
-                        />
-                        {/* {errors?.tagList?.[index] ? (
-                          <p className="animate-display absolute bottom-0 text-red-500 font-Roboto">
-                            {errors?.tagList?.[+e]?.message}
-                          </p>
-                        ) : null} */}
+                  {fields?.map((e, index) => (
+                    <li key={e.id} className="animate-display relative">
+                      <label className="inline-block relative">
+                        <Tag delete={remove} key={e.id} id={e.id} index={index} error={!!tagErrors?.tags?.[index]} />
+                        {tagErrors?.tags?.[index] && (
+                          <ErrorMessage message={tagErrors?.tags?.[index]?.message} fontsize={12} />
+                        )}
                       </label>
                     </li>
                   ))}
@@ -143,11 +127,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
             </div>
           </fieldset>
         </div>
-        <ColorButton
-          type="submit"
-          className="w-[200px] xs:self-center sm:self-start"
-          onClick={() => console.log(errors)}
-        >
+        <ColorButton type="submit" className="w-[200px] xs:self-center sm:self-start">
           Send
         </ColorButton>
         <Button
@@ -159,13 +139,13 @@ const CreateArticle: React.FC = (): JSX.Element => {
             maxWidth: "86px",
             whiteSpace: "nowrap",
             textTransform: "capitalize",
-            fontSize: isMobile ? "10px" : null,
+            fontSize: isMobile ? "12px" : null,
           }}
           className={clsx(
-            !firstRender ? (tags?.length ? "animate-transform" : "animate-transform-back") : "animate-none"
+            !firstRender ? (fields?.length ? "animate-transform" : "animate-transform-back") : "animate-none"
           )}
           onClick={() => {
-            setTags((prev) => [...prev, randomId()])
+            append({ tag: "" })
             setFirstRender(false)
           }}
         >

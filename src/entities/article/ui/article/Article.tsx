@@ -8,23 +8,38 @@ import { useSetLikeMutation } from "shared/redux/api"
 import { Box, CircularProgress, useMediaQuery } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
+import { useDispatch, useSelector } from "react-redux"
+import { change } from "shared/redux/local"
+import { store } from "shared/redux"
 
 const avatar = require("../../../../shared/assets/avatar.png")
 
 const Article: React.FC<IArticle> = (props: IArticle) => {
-  const [image, setImage] = useState(props.author.image)
+  const { changed } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
+  const [image, setImage] = useState<string | undefined>(props.author.image)
   const [favorited, setFavorited] = useState<boolean>(props.favorited)
   const [favoritesCount, setFavoritesCount] = useState<number>(props.favoritesCount)
-  const [load, setLoad] = useState<boolean>(false)
+  const [load, setLoad] = useState<boolean | string>(false)
   const [setLike, result] = useSetLikeMutation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const isPointer = useMediaQuery("(pointer: fine)")
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!load) setImage(avatar)
-    }, 1000)
-    return () => clearTimeout(timer)
+    let timer: NodeJS.Timeout | undefined
+    if (load === "end" && changed) setImage(avatar)
+    if (!load) {
+      timer = setTimeout(() => {
+        setImage(avatar)
+        setLoad("end")
+        dispatch(change(true))
+      }, 1000)
+    }
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+    }
   }, [load])
 
   useEffect(() => {
@@ -78,14 +93,14 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
             </Box>
             <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>{formatDate(props.createdAt)}</Box>
           </Box>
-          <div className="min-w-[46px] rounded-[50%]">
-            {!load && <CircularProgress color="info" />}
+          <div className="min-w-[46px] min-h-[46px] rounded-[50%]">
+            {!load && <CircularProgress aria-busy="true" color="info" />}
             <img
               src={image}
               onLoad={() => setLoad(true)}
               alt="avatar"
               style={{ display: load ? "block" : "none" }}
-              className="min-w-[46px] w-[46px] h-[46px] rounded-[50%] animate-display"
+              className=" min-w-[46px] max-w-[46px] max-h-[46px] min-h-[46px] rounded-[50%] animate-display"
             />
           </div>
         </Box>

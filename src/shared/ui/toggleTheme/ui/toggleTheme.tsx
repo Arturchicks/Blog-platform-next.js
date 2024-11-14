@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import "../styles/style.css"
 import { useMediaQuery } from "@mui/material"
 import { Box } from "@mui/system"
@@ -10,6 +10,13 @@ type Toggle = {
 }
 export const ToggleTheme: React.FC<Toggle> = ({ setMode, mode }: Toggle) => {
   const isMobile = useMediaQuery("(max-width: 540px)")
+  const [currentMode, setCurrentMode] = useState<Mode | null>(null)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMode(currentMode)
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [currentMode])
   return (
     <div className={clsx("w-20 h-10 absolute", isMobile ? "top-[-43px] left-0" : "top-[-21px] left-[120px]")}>
       <input
@@ -18,9 +25,8 @@ export const ToggleTheme: React.FC<Toggle> = ({ setMode, mode }: Toggle) => {
         className="toggleLabel-input"
         checked={mode === "dark"}
         onClick={() => {
-          if (mode === "dark") setMode("light")
-          else setMode("dark")
-          console.log(mode)
+          if (currentMode === "dark") setCurrentMode("light")
+          else setCurrentMode("dark")
         }}
       />
       <label htmlFor="darkmode-toggle" className="toggleLabel">

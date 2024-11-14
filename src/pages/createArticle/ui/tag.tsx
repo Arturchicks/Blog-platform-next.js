@@ -6,14 +6,7 @@ export const Tag: React.FC<ITag> = (props: ITag): JSX.Element => {
   const isMobile = useMediaQuery("(max-width: 480px)")
   return (
     <div className="flex items-center gap-5 p-1">
-      <TextField
-        rows={1}
-        placeholder="tag"
-        size="small"
-        {...props.register(`tagList.${props.index}`)}
-        // name={`tagList.${+props.id}`}
-        error={props.error}
-      />
+      <TextField rows={1} placeholder="tag" size="small" error={props.error} />
       <Button
         variant="text"
         size="large"
@@ -28,9 +21,7 @@ export const Tag: React.FC<ITag> = (props: ITag): JSX.Element => {
           },
         }}
         onClick={() => {
-          props.unregister(`tagList.${props.index}`)
-          props.delete(props.id, props.index)
-          console.log(props.id)
+          props.delete(props.index)
         }}
       ></Button>
     </div>

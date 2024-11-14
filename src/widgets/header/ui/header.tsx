@@ -14,13 +14,13 @@ export const AppHeader: React.FC = () => {
   const { pathname } = useLocation()
   const isMobile = useMediaQuery("(max-width: 480px)")
   const isPointer = useMediaQuery("(pointer: fine)")
+  const token = localStorage.getItem("token")
   const { mode, setMode } = useColorScheme()
   const handleLogOut = () => {
     dispatch(baseApi.util.resetApiState())
     localStorage.removeItem("token")
     navigate("/")
   }
-  console.log("pdated")
   return (
     <Box
       className="flex p-2 h-[80px] items-center justify-between"
@@ -34,7 +34,7 @@ export const AppHeader: React.FC = () => {
         </Link>
         <ToggleTheme setMode={setMode} mode={mode} />
       </Box>
-      {!data && (
+      {!data && !token && (
         <Box className="flex gap-4 animate-display">
           <Button onClick={() => navigate("/sign-in")} color="info">
             Sign In

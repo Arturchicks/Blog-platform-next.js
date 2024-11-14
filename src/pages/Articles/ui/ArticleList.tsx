@@ -3,7 +3,7 @@ import { nanoid } from "nanoid"
 import { IArticle } from "../../../entities/article"
 import Article from "../../../entities/article/ui/article/Article"
 import { baseApi, useGetArticlesQuery } from "../../../shared/redux/api"
-import { Pagination } from "@mui/material"
+import { Pagination, useMediaQuery } from "@mui/material"
 import { CircularProgress } from "@mui/material"
 import { useLocation, useParams } from "react-router-dom"
 import Box from "@mui/material/Box"
@@ -16,6 +16,7 @@ export const ArticleList: React.FC = () => {
   const [count, setCount] = useState<number>(0)
   const { pathname } = useLocation()
   const [location, setLocation] = useState<string>(pathname)
+  const isPointer = useMediaQuery("(pointer: fine)")
   const [state, setState] = useState<boolean>(false)
   const { data, isLoading } = useGetArticlesQuery({ offset: offSet, tag: tag })
   const dispatch = useDispatch()
@@ -23,7 +24,7 @@ export const ArticleList: React.FC = () => {
     setOffSet((value - 1) * 20)
     page.current = value
   }, [])
-
+  console.log("articles")
   useLayoutEffect(() => {
     if (data) {
       setCount(Math.floor(data?.articlesCount / 20))
@@ -62,7 +63,17 @@ export const ArticleList: React.FC = () => {
         <>
           <div className="flex flex-col gap-6">{articles}</div>
           {count > 1 && (
-            <Pagination count={count} className="flex justify-center mt-2" onChange={handlePage} page={page.current} />
+            <Pagination
+              count={count}
+              className="flex justify-center mt-2"
+              onChange={handlePage}
+              page={page.current}
+              sx={{
+                "& .MuiPaginationItem-root:hover": {
+                  backgroundColor: isPointer ? "rgba(0, 0, 0, 0.08)" : null,
+                },
+              }}
+            />
           )}
         </>
       )}

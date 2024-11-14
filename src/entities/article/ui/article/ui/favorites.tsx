@@ -1,11 +1,9 @@
 import React, { useState } from "react"
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder"
-import Favorite from "@mui/icons-material/Favorite"
 import { Box, Checkbox, useMediaQuery } from "@mui/material"
-import { useLocation, useParams } from "react-router-dom"
+import { FavoriteBorder, Favorite } from "@mui/icons-material"
+import { useLocation } from "react-router-dom"
 import { baseApi } from "shared/redux/api"
 import { useDispatch } from "react-redux"
-import { change } from "shared/redux/local"
 import { ICount } from "entities/article/types/types"
 
 const Favorites: React.FC<ICount> = (props: ICount) => {
@@ -17,7 +15,6 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
     if (pathname !== "/articles" && !pathname.includes("tag")) {
       dispatch(baseApi.util.invalidateTags(["Article"]))
     }
-    dispatch(change("changed"))
     method === "POST" ? setMethod("DELETE") : setMethod("POST")
     props.onToggleLike({ slug: props.slug, method })
   }

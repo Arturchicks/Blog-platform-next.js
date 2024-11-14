@@ -44,7 +44,7 @@ export const ArticlePage: React.FC = (): JSX.Element => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!load) setImage(avatar)
-    }, 1000)
+    }, 2000)
     return () => clearTimeout(timer)
   }, [load])
 
@@ -81,14 +81,14 @@ export const ArticlePage: React.FC = (): JSX.Element => {
                   {formatDate(data.article.createdAt)}
                 </Box>
               </Box>
-              <div className="w-[46px] h-[46px]">
+              <div className="min-h-[46px] min-w-[46px] max-w-[46px] max-h-[46px]">
                 {!load && <CircularProgress color="info" />}
                 <img
                   src={image}
                   onLoad={() => setLoad(true)}
                   alt="avatar"
                   style={{ display: load ? "block" : "none" }}
-                  className="w-12 rounded-[50%] animate-display min-w-[46px] min-h-[46px]"
+                  className="rounded-[50%] animate-display min-w-[46px] max-w-[46px] max-h-[46px] min-h-[46px]"
                 />
               </div>
             </Box>

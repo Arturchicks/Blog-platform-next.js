@@ -3,12 +3,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 const localReducer = createSlice({
   name: "local",
   initialState: {
-    changed: "no",
+    changed: false,
   },
   reducers: {
-    change: (state, action: PayloadAction<string>) => {
+    change: (state, action: PayloadAction<boolean>) => {
       state.changed = action.payload
-      console.log(state.changed, "from store")
     },
   },
 })

@@ -35,18 +35,21 @@ export const EditUser: React.FC = (): JSX.Element => {
       reader.readAsDataURL(files[0])
     }
   }
-  const handleDeleteImg = () => {
-    setImage(null)
-    setImageName(null)
-  }
+
   const isPointer = useMediaQuery("(pointer: fine)")
   const {
     register,
     handleSubmit,
     setError,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
+  const handleDeleteImg = () => {
+    setValue("image", undefined)
+    setImage(null)
+    setImageName(null)
+  }
   const [edit] = useEditProfileMutation()
   const { data: userData } = useGetCurrentUserQuery(null)
   const navigate = useNavigate()
@@ -161,25 +164,6 @@ export const EditUser: React.FC = (): JSX.Element => {
             )}
           </label>
           <div className="h-[72px] flex items-start gap-2 flex-wrap">
-            {/* <InputLabel
-              htmlFor="file_input"
-              className={clsx(
-                "relative whitespace-nowrap max-w-[120px] flex justify-center",
-                isPointer ? "hover:opacity-50" : null,
-                "items-center border-none h-[36px] bg-[#1890FF] rounded-md text-xs text-white font-medium p-1 cursor-pointer"
-              )}
-            >
-              New image
-              <input
-                className="invisible absolute top-0 left-0"
-                aria-describedby="file_input_help"
-                id="file_input"
-                type="file"
-                {...register("image", {
-                  onChange: (e) => handleImg(e),
-                })}
-              />
-            </InputLabel> */}
             <Button
               component="label"
               role={undefined}
@@ -193,7 +177,6 @@ export const EditUser: React.FC = (): JSX.Element => {
                 type="file"
                 {...register("image", {
                   onChange: (e) => {
-                    console.log(e)
                     handleImg(e)
                   },
                 })}
