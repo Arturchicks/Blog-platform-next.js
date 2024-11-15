@@ -4,18 +4,19 @@ import { baseApi, useGetCurrentUserQuery } from "shared/redux/api"
 import { Button, useMediaQuery, Box } from "@mui/material"
 import { useDispatch } from "react-redux"
 import { useColorScheme } from "@mui/material/styles"
-import { ToggleTheme } from "shared/ui/toggleTheme/ui/toggleTheme"
 import clsx from "clsx"
+import { MaterialUISwitch } from "shared/ui/toggleTheme/ui/Toggle"
 
 export const AppHeader: React.FC = () => {
+  console.log("header")
   const { data } = useGetCurrentUserQuery(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const isMobile = useMediaQuery("(max-width: 480px)")
+  const { mode, setMode } = useColorScheme()
   const isPointer = useMediaQuery("(pointer: fine)")
   const token = localStorage.getItem("token")
-  const { mode, setMode } = useColorScheme()
   const handleLogOut = () => {
     dispatch(baseApi.util.resetApiState())
     localStorage.removeItem("token")
@@ -32,7 +33,7 @@ export const AppHeader: React.FC = () => {
             RealWorld Blog
           </span>
         </Link>
-        <ToggleTheme setMode={setMode} mode={mode} />
+        <MaterialUISwitch onClick={() => setMode(mode === "dark" ? "light" : "dark")} checked={mode === "dark"} />
       </Box>
       {!data && !token && (
         <Box className="flex gap-4 animate-display">

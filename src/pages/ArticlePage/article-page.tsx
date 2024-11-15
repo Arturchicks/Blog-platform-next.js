@@ -16,6 +16,8 @@ import {
 import { CircularProgress, Theme, Box } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
 import { useTheme } from "@emotion/react"
+import { useSelector } from "react-redux"
+import { store } from "shared/redux"
 
 const avatar = require("../../shared/assets/avatar.png")
 
@@ -25,6 +27,7 @@ export const ArticlePage: React.FC = (): JSX.Element => {
   const { data: userData } = useGetCurrentUserQuery(null)
   const [load, setLoad] = useState<boolean>(false)
   const [image, setImage] = useState<string>(data?.article.author.image)
+  const { changed } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
   const [setLike] = useSetLikeMutation()
   const [del] = useDeleteArticleMutation()
   const theme = useTheme() as Theme
@@ -42,14 +45,14 @@ export const ArticlePage: React.FC = (): JSX.Element => {
     console.log(e)
   }
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!load) setImage(avatar)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [load])
-
-  useEffect(() => {
-    if (data?.article.author.image) setImage(data.article.author.image)
+    if (slug) {
+      if (changed.includes(slug)) {
+        setImage(avatar)
+        setLoad(true)
+      } else {
+        if (data?.article.author.image) setImage(data.article.author.image)
+      }
+    }
   }, [data])
 
   return (

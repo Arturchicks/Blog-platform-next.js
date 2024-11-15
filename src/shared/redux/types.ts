@@ -57,3 +57,7 @@ export interface MutationLike {
 export interface QueryUser {
   user: { username: string; email: string; token: string; image?: string }
 }
+
+export interface isAvatar {
+  slug: string
+}

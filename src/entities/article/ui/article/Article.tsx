@@ -27,20 +27,23 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
 
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined
-    if (load === "end" && changed) setImage(avatar)
-    if (!load) {
-      timer = setTimeout(() => {
-        setImage(avatar)
-        setLoad("end")
-        dispatch(change(true))
-      }, 1000)
+    if (changed.includes(props.slug)) {
+      setLoad(true)
+      setImage(avatar)
+    } else {
+      if (!load) {
+        timer = setTimeout(() => {
+          setImage(avatar)
+          dispatch(change(props.slug))
+        }, 1000)
+      }
     }
     return () => {
       if (timer) {
         clearTimeout(timer)
       }
     }
-  }, [load])
+  }, [load, dispatch])
 
   useEffect(() => {
     if (result.isSuccess) {

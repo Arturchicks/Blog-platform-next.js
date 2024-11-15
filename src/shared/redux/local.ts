@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-
+type Local = {
+  changed: string[]
+}
 const localReducer = createSlice({
   name: "local",
   initialState: {
-    changed: false,
+    changed: [] as string[],
   },
   reducers: {
-    change: (state, action: PayloadAction<boolean>) => {
-      state.changed = action.payload
+    change: (state, action: PayloadAction<string>) => {
+      state.changed.push(action.payload)
     },
   },
 })
