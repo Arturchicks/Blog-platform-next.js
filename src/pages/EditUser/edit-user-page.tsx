@@ -1,5 +1,5 @@
-import React, { ReactEventHandler, useEffect, useState } from "react"
-import { Box, TextField, useMediaQuery, InputLabel, Button } from "@mui/material"
+import React, { useState } from "react"
+import { Box, TextField, Button } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { schema } from "./utils/schema"
 import { useForm } from "react-hook-form"
@@ -8,20 +8,15 @@ import { useEditProfileMutation, useGetCurrentUserQuery } from "shared/redux/api
 import CloudUploadIcon from "@mui/icons-material/CloudUpload"
 import { VisuallyHiddenInput } from "./ui/visibilityHiddenInput"
 import { useNavigate } from "react-router-dom"
-import { User } from "./types/types"
+import { IEditUser } from "./types/types"
 import DeleteIcon from "@mui/icons-material/Delete"
 import clsx from "clsx"
+import { Error } from "./types/types"
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      "file-input": React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
-    }
-  }
-}
 export const EditUser: React.FC = (): JSX.Element => {
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
   const [imageName, setImageName] = useState<string | null>(null)
+  const [serverError, setServerError] = useState<Error | null>(null)
   const handleImg = (e: Event) => {
     const { files } = e.target as HTMLInputElement
     if (files?.[0]) {
@@ -36,7 +31,6 @@ export const EditUser: React.FC = (): JSX.Element => {
     }
   }
 
-  const isPointer = useMediaQuery("(pointer: fine)")
   const {
     register,
     handleSubmit,
@@ -50,12 +44,11 @@ export const EditUser: React.FC = (): JSX.Element => {
     setImage(null)
     setImageName(null)
   }
-  const [edit] = useEditProfileMutation()
-  const { data: userData } = useGetCurrentUserQuery(null)
+  const [edit, { isError }] = useEditProfileMutation()
+  const { data: userData } = useGetCurrentUserQuery(null, { skip: isError })
   const navigate = useNavigate()
   const onSubmit = handleSubmit(async (data) => {
     const dataList = Object.values(data).filter((e) => e).length
-    console.log(data)
     if (dataList <= 1 && !image) {
       setError("manual", {
         type: "required",
@@ -64,7 +57,7 @@ export const EditUser: React.FC = (): JSX.Element => {
     }
     if (userData) {
       const { email, username } = userData.user
-      const user: User = {
+      const user: IEditUser = {
         email: data.email || email,
         username: data.username || username,
         image: image || userData?.user.image,
@@ -72,15 +65,14 @@ export const EditUser: React.FC = (): JSX.Element => {
       if (data.password) {
         user.password = data.password
       }
-      const res = await edit({ user: user })
-      if (dataList > 1 || image) {
-        navigate("/articles")
+      if (image || dataList > 1) {
+        const { error } = (await edit({ user: user })) as IEditUser
+        if (!error) navigate("/articles")
+        else setServerError(error.data.errors)
       }
     }
   })
-  useEffect(() => {
-    console.log(image, imageName)
-  }, [image, imageName])
+
   return (
     <Box
       className={clsx(
@@ -109,11 +101,16 @@ export const EditUser: React.FC = (): JSX.Element => {
               size="small"
               error={!!errors.username}
               {...register("username", {
-                onChange: () => clearErrors("manual"),
+                onChange: () => {
+                  clearErrors("manual")
+                  setServerError((prev) => ({ ...prev, username: "" }))
+                },
               })}
             />
-            {errors.username && (
-              <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.username?.message}</p>
+            {(errors.username || serverError?.username) && (
+              <p className="animate-display text-red-500 font-Roboto text-[12px]">
+                {`Username ${serverError?.username}` || errors.username?.message}
+              </p>
             )}
           </label>
           <label htmlFor="email" className="inline-block h-20">
@@ -126,11 +123,16 @@ export const EditUser: React.FC = (): JSX.Element => {
               size="small"
               error={!!errors.email}
               {...register("email", {
-                onChange: () => clearErrors("manual"),
+                onChange: () => {
+                  clearErrors("manual")
+                  setServerError((prev) => ({ ...prev, email: "" }))
+                },
               })}
             />
-            {errors.email && (
-              <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.email?.message}</p>
+            {(errors.email || serverError?.email) && (
+              <p className="animate-display text-red-500 font-Roboto text-[12px]">
+                {`Email ${serverError?.email}` || errors.email?.message}
+              </p>
             )}
           </label>
           <label htmlFor="password" className="inline-block h-20">
@@ -187,7 +189,7 @@ export const EditUser: React.FC = (): JSX.Element => {
             )}
             {imageName && (
               <div className="flex gap-1 items-center animate-display mx-auto">
-                <span className="inline-block max-w-[150px]">{imageName}</span>
+                <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis">{imageName}</span>
                 <img src={image as string} className="w-9 h-9 rounded-[50%]" alt="avatar" />
                 <Button
                   color="error"

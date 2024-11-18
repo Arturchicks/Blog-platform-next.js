@@ -1,3 +1,5 @@
+import { UseFormRegister, UseFormUnregister } from "react-hook-form"
+
 export interface Tag {
   key: string
   delete: (index: number) => void

@@ -34,7 +34,7 @@ export const Policy: React.FC<IPolicy> = ({ agreeTerms, terms }): JSX.Element =>
           </a>
         </span>
       </div>
-      {!terms && <ErrorMessage message="You must agree terms of policy" />}
+      {!terms && <ErrorMessage message="You must agree terms of policy" fontsize={12} />}
     </div>
   )
 }

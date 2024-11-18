@@ -16,7 +16,7 @@ export interface MutationAccount {
   }
 }
 export interface User {
-  user: { username: string; email: string; password: string }
+  user: { username: string; email: string; password?: string }
 }
 export interface MutationArticle {
   slug: string

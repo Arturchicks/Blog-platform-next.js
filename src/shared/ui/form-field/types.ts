@@ -1,13 +1,16 @@
+import { ISignUp } from "features/sign-up-form/types/types"
 import { TFieldValues } from "pages/createArticle/types/types"
-import { FieldError, FieldErrors, UseFormRegister } from "react-hook-form"
-import { FieldValues } from "react-hook-form"
+import { FieldError, FieldErrors, UseFormRegister, UseFormRegisterReturn, UseFormTrigger } from "react-hook-form"
+
 export interface IField {
-  rows: number
+  rows?: number
   placeholder: string
   id: string
+  type?: string
+  trigger?: UseFormTrigger<ISignUp>
   error: boolean
-  name: keyof TFieldValues
+  name: keyof TFieldValues | keyof ISignUp
   errors: FieldError | undefined
   multiline?: boolean
-  register: UseFormRegister<TFieldValues>
+  register: UseFormRegisterReturn
 }

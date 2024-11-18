@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { baseApi, useGetCurrentUserQuery } from "shared/redux/api"
 import { Button, useMediaQuery, Box } from "@mui/material"
@@ -9,7 +9,6 @@ import { MaterialUISwitch } from "shared/ui/toggleTheme/ui/Toggle"
 
 export const AppHeader: React.FC = () => {
   console.log("header")
-  const { data } = useGetCurrentUserQuery(null)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -17,11 +16,13 @@ export const AppHeader: React.FC = () => {
   const { mode, setMode } = useColorScheme()
   const isPointer = useMediaQuery("(pointer: fine)")
   const token = localStorage.getItem("token")
-  const handleLogOut = () => {
+  const { data } = useGetCurrentUserQuery(null)
+  const handleLogOut = useCallback(() => {
     dispatch(baseApi.util.resetApiState())
     localStorage.removeItem("token")
     navigate("/")
-  }
+  }, [])
+
   return (
     <Box
       className="flex p-2 h-[80px] items-center justify-between"
@@ -37,12 +38,12 @@ export const AppHeader: React.FC = () => {
       </Box>
       {!data && !token && (
         <Box className="flex gap-4 animate-display">
-          <Button onClick={() => navigate("/sign-in")} color="info">
+          <Button color="info" onClick={() => navigate("/sign-in")}>
             Sign In
           </Button>
           <Button
-            onClick={() => navigate("/sign-up")}
             color="success"
+            onClick={() => navigate("/sign-up")}
             variant="outlined"
             sx={{ textTransform: "capitalize" }}
           >

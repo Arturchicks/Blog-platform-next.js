@@ -56,6 +56,9 @@ export const theme = createTheme({
             outline: "2px solid #1890FF",
             borderRadius: "4px",
           },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: 0,
+          },
         },
       },
     },
