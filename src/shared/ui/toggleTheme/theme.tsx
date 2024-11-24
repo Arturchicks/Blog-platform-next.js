@@ -56,6 +56,10 @@ export const theme = createTheme({
             outline: "2px solid #1890FF",
             borderRadius: "4px",
           },
+          "&.Mui-error:focus-within": {
+            outline: "2px solid #f44336",
+            borderRadius: "4px",
+          },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             border: 0,
           },

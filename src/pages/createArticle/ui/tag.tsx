@@ -1,12 +1,13 @@
 import { Button, TextField, useMediaQuery } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { Tag as ITag } from "../types/types"
+import { ErrorMessage } from "shared/ui/error"
 
-export const Tag: React.FC<ITag> = (props: ITag): JSX.Element => {
+export const Tag: React.FC<ITag> = ({ register, remove, index, error }: ITag): JSX.Element => {
   const isMobile = useMediaQuery("(max-width: 480px)")
   return (
     <div className="flex items-center gap-5 p-1">
-      <TextField rows={1} placeholder="tag" size="small" error={props.error} />
+      <TextField rows={1} placeholder="tag" size="small" {...register} error={error} />
       <Button
         variant="text"
         size="large"
@@ -20,10 +21,9 @@ export const Tag: React.FC<ITag> = (props: ITag): JSX.Element => {
             margin: 0,
           },
         }}
-        onClick={() => {
-          props.delete(props.index)
-        }}
+        onClick={() => remove(index)}
       ></Button>
+      {error && <ErrorMessage fontsize={12} />}
     </div>
   )
 }

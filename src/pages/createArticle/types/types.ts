@@ -1,18 +1,16 @@
-import { UseFormRegister, UseFormUnregister } from "react-hook-form"
+import { UseFieldArrayRemove, UseFormRegisterReturn, UseFormUnregister } from "react-hook-form"
 
 export interface Tag {
   key: string
-  delete: (index: number) => void
   id: string
   index: number
+  register?: UseFormRegisterReturn
   error: boolean
+  remove: UseFieldArrayRemove | ((index: number) => void)
 }
-
-export interface TFieldValues {
+export interface Fields {
   title: string
   description: string
   body: string
-}
-export interface Tags {
-  tags: { tag: string }[]
+  tagList?: { tag: string }[]
 }

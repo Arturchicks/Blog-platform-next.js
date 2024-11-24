@@ -6,6 +6,7 @@ import { AuthForm } from "features/sign-up-form"
 import CreateArticle from "pages/createArticle/createArticle"
 import { ArticlePage } from "pages/ArticlePage/article-page"
 import { EditUser } from "pages/EditUser/edit-user-page"
+import EditArticle from "pages/editArticle/edit-article-page"
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "edit-profile",
         element: <EditUser />,
+      },
+      {
+        path: "edit-article/:slug",
+        element: <EditArticle />,
       },
     ],
   },

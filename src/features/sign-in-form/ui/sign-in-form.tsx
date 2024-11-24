@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { ISignIn } from "../types/sign-in-form"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -45,7 +45,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
       className="animate-display flex flex-col xs:w-[286px] sm:w-[385px] rounded-lg p-8 gap-4 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
-      <span className="text-center">Sign In</span>
+      <span className="text-center text-[20px]">Sign In</span>
       <form className="flex flex-col gap-7" onSubmit={onSubmit}>
         <div className="flex flex-col gap-4">
           <label htmlFor="email" className="flex flex-col relative">
@@ -61,6 +61,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
             {errors.email || serverError ? (
               <ErrorMessage
                 message={errors.email ? errors.email?.message : serverError ? "Invalid email or password" : null}
+                fontsize={12}
               />
             ) : null}
           </label>
@@ -74,7 +75,7 @@ export const SignInForm: React.FC = (): JSX.Element => {
               id="password-input"
               error={!!errors.password || !!serverError}
             />
-            {errors.password && <ErrorMessage message={errors.password.message} />}
+            {errors.password && <ErrorMessage message={errors.password.message} fontsize={12} />}
           </label>
         </div>
         <ColorButton variant="contained" className="h-11" type="submit">

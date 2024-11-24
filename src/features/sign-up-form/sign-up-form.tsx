@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { IsAny, useForm } from "react-hook-form"
 import { schema } from "./utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { ISignUp } from "./types/types"
@@ -51,7 +51,7 @@ export const SignUpForm: React.FC = () => {
       className="animate-display flex flex-col xs:w-[90vw] sx:w-[385px]  rounded-[5px] p-8 pb-16 gap-6 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
-      <span className="text-center">Create new account</span>
+      <span className="text-center text-[20px]">Create new account</span>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
         <div className="flex flex-col gap-6">
           <FormField
@@ -76,7 +76,6 @@ export const SignUpForm: React.FC = () => {
             <FormField
               register={register("password")}
               placeholder="Password"
-              trigger={trigger}
               id="password-input"
               name="password"
               error={!!errors.password}

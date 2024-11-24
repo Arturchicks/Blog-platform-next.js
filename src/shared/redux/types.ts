@@ -1,8 +1,23 @@
+import { SrvRecord } from "dns"
 import { IArticle } from "../../entities/article"
 
 export interface QueryArticles {
   articles: Array<IArticle>
   articlesCount: number
+}
+export interface QueryArticle {
+  article: {
+    slug: string
+    title: string
+    description: string
+    body: string
+    tagList: string[]
+    createdAt: string
+    updatedAt: string
+    favorited: boolean
+    favoritesCount: number
+    author: Author
+  }
 }
 export interface QueryArgs {
   offset: number
@@ -23,7 +38,7 @@ export interface MutationArticle {
   title: string
   description: string
   body: string
-  tags: string[]
+  tagList: { tag: string }[]
   createdAt: string
   updatedAt: string
   favorited: boolean
@@ -34,7 +49,7 @@ export interface MutationArticle {
 export interface Author {
   username: string
   bio: string
-  image: string
+  image: string | (() => string)
   following: boolean
 }
 

@@ -10,7 +10,7 @@ export const Policy: React.FC<IPolicy> = ({ agreeTerms, terms }): JSX.Element =>
     <div className="flex flex-col relative">
       <Box className="w-[100%] h-[1px]" sx={{ borderTop: "1px solid", borderColor: "text.secondary" }} />
       <label htmlFor="policy" />
-      <div className="flex pt-2">
+      <div className="flex pt-2 items-center">
         <Checkbox
           id="policy"
           className={clsx("max-h-[42px]", !terms ? "animate-bounce" : "animate-none")}
@@ -34,7 +34,7 @@ export const Policy: React.FC<IPolicy> = ({ agreeTerms, terms }): JSX.Element =>
           </a>
         </span>
       </div>
-      {!terms && <ErrorMessage message="You must agree terms of policy" fontsize={12} />}
+      {!terms && <ErrorMessage fontsize={12} />}
     </div>
   )
 }

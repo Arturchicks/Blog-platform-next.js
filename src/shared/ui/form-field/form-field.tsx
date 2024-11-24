@@ -1,12 +1,12 @@
 import { Box, TextField } from "@mui/material"
-import React from "react"
+import React, { useState } from "react"
 import { ErrorMessage } from "../error"
 import { IField } from "./types"
 
 export const FormField: React.FC<IField> = (props): JSX.Element => {
   return (
     <label htmlFor={props.id} className="relative">
-      <Box sx={{ marginBottom: "4px", fontSize: "14px" }}>{props.placeholder}</Box>
+      <Box sx={{ fontSize: "14px" }}>{props.placeholder}</Box>
       <TextField
         rows={props.rows}
         placeholder={props.placeholder}

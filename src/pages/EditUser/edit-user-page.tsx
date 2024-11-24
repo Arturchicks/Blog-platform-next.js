@@ -39,11 +39,13 @@ export const EditUser: React.FC = (): JSX.Element => {
     setValue,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
+
   const handleDeleteImg = () => {
     setValue("image", undefined)
     setImage(null)
     setImageName(null)
   }
+
   const [edit, { isError }] = useEditProfileMutation()
   const { data: userData } = useGetCurrentUserQuery(null, { skip: isError })
   const navigate = useNavigate()
@@ -99,7 +101,7 @@ export const EditUser: React.FC = (): JSX.Element => {
               sx={{ width: "100%" }}
               rows={1}
               size="small"
-              error={!!errors.username}
+              error={!!errors.username || !!serverError?.username}
               {...register("username", {
                 onChange: () => {
                   clearErrors("manual")
@@ -121,7 +123,7 @@ export const EditUser: React.FC = (): JSX.Element => {
               sx={{ width: "100%" }}
               rows={1}
               size="small"
-              error={!!errors.email}
+              error={!!errors.email || !!serverError?.email}
               {...register("email", {
                 onChange: () => {
                   clearErrors("manual")
@@ -131,7 +133,7 @@ export const EditUser: React.FC = (): JSX.Element => {
             />
             {(errors.email || serverError?.email) && (
               <p className="animate-display text-red-500 font-Roboto text-[12px]">
-                {`Email ${serverError?.email}` || errors.email?.message}
+                {errors.email?.message || `Email ${serverError?.email}`}
               </p>
             )}
           </label>
@@ -172,6 +174,7 @@ export const EditUser: React.FC = (): JSX.Element => {
               color="info"
               variant="contained"
               tabIndex={-1}
+              sx={{ bgcolor: "#1890FF" }}
               startIcon={<CloudUploadIcon />}
             >
               Upload img

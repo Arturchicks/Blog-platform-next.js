@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { IArticle } from "../../types/types"
-import { formatDate } from "../../lib/formatDate"
-import { formatTitle } from "entities/article/lib/formatTitle"
 import Favorites from "./ui/favorites"
 import { Tags } from "./ui/tagList"
 import { useSetLikeMutation } from "shared/redux/api"
@@ -9,8 +7,9 @@ import { Box, CircularProgress, useMediaQuery } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { useDispatch, useSelector } from "react-redux"
-import { change } from "shared/redux/local"
 import { store } from "shared/redux"
+import { change } from "shared/redux/local"
+import { format } from "date-fns"
 
 const avatar = require("../../../../shared/assets/avatar.png")
 
@@ -35,7 +34,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         timer = setTimeout(() => {
           setImage(avatar)
           dispatch(change(props.slug))
-        }, 1000)
+        }, 2000)
       }
     }
     return () => {
@@ -43,7 +42,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         clearTimeout(timer)
       }
     }
-  }, [load, dispatch])
+  }, [load])
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -68,50 +67,54 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
     <Box
       onClick={handleClick}
       className={clsx(
-        "flex flex-col cursor-pointer xs:h-[120px] xs:p-[2vw] sm:p-[15px] sm:h-[140px] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden",
-        isPointer ? "hover:bg-[#0288d11c]" : null
+        "flex flex-col justify-between cursor-pointer xs:h-[120px] xs:p-[2vw] sm:p-[15px] sm:h-[160px] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden",
+        isPointer ? "hover:bg-[#636a8d1c]" : null
       )}
       sx={{ backgroundColor: "primary.main", color: "secondary.main" }}
     >
-      <Box className="flex w-[100%] justify-between items-center max-h-[42px]">
-        <div className="flex max-w-[60%] items-center">
-          <h3 className=" text-[#1890FF] text-xl max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap">
-            {props.title.length > 20 ? `${formatTitle(props.title)}...` : props.title}
-          </h3>
-          <Favorites
-            onToggleLike={setLike}
-            count={favoritesCount}
-            liked={favorited}
-            slug={props.slug}
-            className="inline-block min-w-3 text-clamp pb-[2px]"
-          />
-        </div>
-        <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%]">
-          <Box
-            sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}
-            className="flex flex-col text-right w-[80%] justify-center overflow-hidden"
-          >
-            <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
-              {props.author.username}
-            </Box>
-            <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>{formatDate(props.createdAt)}</Box>
-          </Box>
-          <div className="min-w-[46px] min-h-[46px] rounded-[50%]">
-            {!load && <CircularProgress aria-busy="true" color="info" />}
-            <img
-              src={image}
-              onLoad={() => setLoad(true)}
-              alt="avatar"
-              style={{ display: load ? "block" : "none" }}
-              className=" min-w-[46px] max-w-[46px] max-h-[46px] min-h-[46px] rounded-[50%] animate-display"
+      <Box>
+        <Box className="flex w-[100%] justify-between items-center max-h-[42px]">
+          <Box className="flex max-w-[60%] items-center">
+            <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap">
+              {props.title.trim() || "Untitled"}
+            </h3>
+            <Favorites
+              onToggleLike={setLike}
+              count={favoritesCount}
+              liked={favorited}
+              slug={props.slug}
+              className="inline-block min-w-3 text-clamp pb-[2px]"
             />
-          </div>
+          </Box>
+          <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%]">
+            <Box
+              sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}
+              className="flex flex-col text-right w-[80%] justify-center overflow-hidden"
+            >
+              <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
+                {props.author.username}
+              </Box>
+              <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>
+                {format(props.createdAt, "PP")}
+              </Box>
+            </Box>
+            <div className="min-w-[46px] min-h-[46px] rounded-[50%]">
+              {!load && <CircularProgress aria-busy="true" color="info" />}
+              <img
+                src={image}
+                onLoad={() => setLoad(true)}
+                alt="avatar"
+                style={{ display: load ? "block" : "none" }}
+                className="xs:w-[46px] xs:h-[46px] sm:w-[46px]  sm:h-[46px] lg:w-[56px] lg:h-[56px] rounded-[50%] animate-display"
+              />
+            </div>
+          </Box>
         </Box>
+        <Tags tagList={props.tagList} />
       </Box>
-      <Tags tagList={props.tagList} />
-      <div className="overflow-hidden">
-        <p className="h-[25px] overflow-hidden text-ellipsis">{props.description}</p>
-      </div>
+      <Box className="overflow-hidden">
+        <p className="h-[25px] overflow-hidden text-ellipsis text-[12px]">{props.description}</p>
+      </Box>
     </Box>
   )
 }

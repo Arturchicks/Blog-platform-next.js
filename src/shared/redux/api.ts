@@ -1,7 +1,17 @@
-import { createApi, fetchBaseQuery, RootState } from "@reduxjs/toolkit/query/react"
-import { MutationAccount, User, MutationArticle, Article, QueryArticles, MutationLike, QueryUser } from "./types"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
+import {
+  MutationAccount,
+  User,
+  MutationArticle,
+  Article,
+  QueryArticles,
+  MutationLike,
+  QueryUser,
+  QueryArticle,
+} from "./types"
 import { QueryArgs } from "./types"
 import { Params } from "./types"
+import { title } from "process"
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
@@ -19,7 +29,7 @@ export const baseApi = createApi({
       query: ({ offset, tag }) => (!tag ? `articles?offset=${offset}` : `articles?tag=${tag}`),
       providesTags: ["Article"],
     }),
-    getArticle: builder.query({
+    getArticle: builder.query<QueryArticle, string>({
       query: (slug) => `articles/${slug}`,
       providesTags: ["ArticlePage"],
     }),
@@ -72,6 +82,14 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Article"],
     }),
+    updateArticle: builder.mutation({
+      query: ({ slug, data }) => ({
+        url: `articles/${slug}`,
+        method: "PUT",
+        body: { article: data },
+      }),
+      invalidatesTags: ["Article", "ArticlePage"],
+    }),
   }),
 })
 export const {
@@ -84,4 +102,5 @@ export const {
   useCreateArticleMutation,
   useDeleteArticleMutation,
   useEditProfileMutation,
+  useUpdateArticleMutation,
 } = baseApi

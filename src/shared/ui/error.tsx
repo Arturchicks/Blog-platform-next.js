@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import React from "react"
 type ErrorProps = {
-  message: string | undefined | null
+  message?: string | undefined | null
   fontsize?: number
 }
 export const ErrorMessage: React.FC<ErrorProps> = ({ message, fontsize }: ErrorProps): JSX.Element => {
