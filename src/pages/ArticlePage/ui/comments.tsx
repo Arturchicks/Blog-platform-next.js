@@ -29,13 +29,12 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
     resetField,
   } = useForm({ resolver: yupResolver(schema) })
   const handleDeleteImg = () => {
-    resetField("imageHash")
-    resetField("image")
+    setValue("image", undefined)
+    setValue("imageHash", undefined)
     setImage(null)
     setImageName(null)
   }
   const body = watch("body")
-  const imageHash = watch("imageHash")
   const onSubmit = handleSubmit(async (data) => {
     if (!Object.values(data).filter((e) => e).length) setError("body", { message: "can't be blank" })
     else {
