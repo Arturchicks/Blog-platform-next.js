@@ -8,10 +8,11 @@ import {
   MutationLike,
   QueryUser,
   QueryArticle,
+  CommentsType,
 } from "./types"
 import { QueryArgs } from "./types"
 import { Params } from "./types"
-import { title } from "process"
+
 export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
@@ -23,7 +24,7 @@ export const baseApi = createApi({
       return headers
     },
   }),
-  tagTypes: ["Article", "User", "ArticlePage"],
+  tagTypes: ["Article", "User", "ArticlePage", "Comments"],
   endpoints: (builder) => ({
     getArticles: builder.query<QueryArticles, QueryArgs>({
       query: ({ offset, tag }) => (!tag ? `articles?offset=${offset}` : `articles?tag=${tag}`),
@@ -65,7 +66,7 @@ export const baseApi = createApi({
         method: "PUT",
         body: user,
       }),
-      invalidatesTags: ["User", "Article"],
+      invalidatesTags: ["User", "Article", "Comments"],
     }),
     createArticle: builder.mutation<MutationArticle, Article>({
       query: (article) => ({
@@ -90,6 +91,25 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Article", "ArticlePage"],
     }),
+    getComments: builder.query({
+      query: (slug) => `articles/${slug}/comments`,
+      providesTags: ["Comments"],
+    }),
+    createComment: builder.mutation({
+      query: ({ slug, data }) => ({
+        url: `articles/${slug}/comments`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["ArticlePage", "Comments"],
+    }),
+    deleteComment: builder.mutation({
+      query: ({ id, slug }) => ({
+        url: `articles/${slug}/comments/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["ArticlePage", "Comments"],
+    }),
   }),
 })
 export const {
@@ -103,4 +123,7 @@ export const {
   useDeleteArticleMutation,
   useEditProfileMutation,
   useUpdateArticleMutation,
+  useGetCommentsQuery,
+  useCreateCommentMutation,
+  useDeleteCommentMutation,
 } = baseApi

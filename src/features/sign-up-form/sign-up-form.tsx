@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { IsAny, useForm } from "react-hook-form"
 import { schema } from "./utils/schema"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { ISignUp } from "./types/types"
+import { ErrorData, ErrorKey, ISignUp, ServerError } from "./types/types"
 import { ColorButton } from "shared/ui/signButton"
 import { Policy } from "./ui/policy"
 import { useCreateAccountMutation, useLoginUserMutation, useGetCurrentUserQuery } from "shared/redux/api"
@@ -15,21 +15,28 @@ export const SignUpForm: React.FC = () => {
     fixedCacheKey: "test",
   })
   const [login, { data: userData, isSuccess: isLoginSuccess, error }] = useLoginUserMutation({ fixedCacheKey: "login" })
-  const { data: user, refetch: refetchCurrentUser, isSuccess: isUserSuccess } = useGetCurrentUserQuery(null)
+  const [skip, setSkip] = useState<boolean>(true)
+  const [serverError, setServerError] = useState<ErrorData["data"]["errors"] | null>(null)
+  const { refetch: refetchCurrentUser } = useGetCurrentUserQuery(null, { skip })
   const navigate = useNavigate()
-  const [terms, setTerms] = useState<boolean | string>("first")
+  const [terms, setTerms] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    trigger,
+    formState: { errors, isSubmitted },
+    setError,
   } = useForm<ISignUp>({ resolver: yupResolver(schema) })
+
   const onSubmit = handleSubmit(async (data) => {
     const { username, email, password } = data
-    if (typeof terms !== "string" && terms) {
+    if (terms) {
       try {
-        await createAccount({ user: { username, email, password } })
-        await login({ user: { email, password } })
+        const { error: createAccountError } = (await createAccount({
+          user: { username, email, password },
+        })) as ServerError
+        if (createAccountError) {
+          setServerError(createAccountError.data.errors)
+        } else await login({ user: { email, password } })
       } catch (e) {
         console.log(e)
       }
@@ -37,6 +44,11 @@ export const SignUpForm: React.FC = () => {
       setTerms(false)
     }
   })
+  useEffect(() => {
+    for (const key in serverError) {
+      setError(key as ErrorKey, { message: `${key} is already taken` })
+    }
+  }, [serverError])
 
   useEffect(() => {
     if (isLoginSuccess) {
@@ -53,38 +65,38 @@ export const SignUpForm: React.FC = () => {
     >
       <span className="text-center text-[20px]">Create new account</span>
       <form className="flex flex-col gap-8" onSubmit={onSubmit}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-5">
           <FormField
-            register={register("username")}
+            register={register}
             name="username"
             placeholder="Username"
             id="username"
-            error={!!errors.username}
+            error={!!errors.username || !!serverError?.username}
             errors={errors.username}
           />
           <label htmlFor="email-input" className="flex flex-col relative">
             <FormField
-              register={register("email")}
+              register={register}
               placeholder="Email"
               name="email"
               id="email-input"
-              error={!!errors.email}
+              error={!!errors.email || !!serverError?.email}
               errors={errors.email}
             />
           </label>
           <label htmlFor="password-input" className="flex flex-col relative">
             <FormField
-              register={register("password")}
+              register={register}
               placeholder="Password"
               id="password-input"
               name="password"
-              error={!!errors.password}
+              error={!!errors.password || !!serverError?.password}
               errors={errors.password}
             />
           </label>
           <label htmlFor="repeat-input" className="flex flex-col relative">
             <FormField
-              register={register("repeat")}
+              register={register}
               placeholder="Repeat password"
               id="repeat-input"
               type="password"
@@ -94,8 +106,8 @@ export const SignUpForm: React.FC = () => {
             />
           </label>
         </div>
-        <Policy agreeTerms={setTerms} terms={terms} />
-        <ColorButton variant="contained" className="h-11" type="submit">
+        <Policy agreeTerms={setTerms} terms={terms} submitted={isSubmitted} />
+        <ColorButton variant="contained" className="h-11" type="submit" onClick={() => setSkip(false)}>
           Create
         </ColorButton>
       </form>

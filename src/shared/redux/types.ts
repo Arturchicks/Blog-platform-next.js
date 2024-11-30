@@ -1,4 +1,3 @@
-import { SrvRecord } from "dns"
 import { IArticle } from "../../entities/article"
 
 export interface QueryArticles {
@@ -48,8 +47,7 @@ export interface MutationArticle {
 
 export interface Author {
   username: string
-  bio: string
-  image: string | (() => string)
+  image: string | undefined
   following: boolean
 }
 
@@ -75,4 +73,14 @@ export interface QueryUser {
 
 export interface isAvatar {
   slug: string
+}
+export interface CommentType {
+  id: string
+  body: string
+  createdAt: string
+  author: Author
+  username: string | undefined
+}
+export interface CommentsType {
+  comments: Comment[]
 }

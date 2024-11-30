@@ -1,25 +1,25 @@
 import { Box, TextField } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ErrorMessage } from "../error"
 import { IField } from "./types"
 
 export const FormField: React.FC<IField> = (props): JSX.Element => {
+  const { defaultValue, register, isSubmitted, ...restProps } = props
+  const [value, setValue] = useState<string | undefined>(defaultValue)
+
   return (
     <label htmlFor={props.id} className="relative">
-      <Box sx={{ fontSize: "14px" }}>{props.placeholder}</Box>
+      <Box sx={{ fontSize: "14px", textTransform: "capitalize" }}>{props.type !== "comment" && props.placeholder}</Box>
       <TextField
-        rows={props.rows}
-        placeholder={props.placeholder}
-        multiline={props.multiline}
-        id={props.id}
-        type={props.type}
         size="small"
         className="w-[100%]"
-        error={props.error}
-        autoComplete="off"
-        {...props.register}
+        value={props.type !== "comment" ? value : defaultValue}
+        {...restProps}
+        {...props.register(props.name, {
+          onChange: (e) => setValue(e.target.value),
+        })}
       />
-      {props.errors && <ErrorMessage message={props.errors.message} fontsize={12} />}
+      {props.errors && <ErrorMessage type={props.type} message={props.errors.message} fontsize={12} />}
     </label>
   )
 }

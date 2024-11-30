@@ -37,7 +37,14 @@ body {
     opacity: 1;
   }
 }
-
+@keyframes vanish {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 @keyframes transform {
   0% {
     left: 0;
@@ -63,6 +70,15 @@ body {
 .animate-transform-back {
   animation: transform-back 0.5s ease-in-out forwards;
 }
+.animate-vanish {
+  animation: vanish 0.5s ease-in-out;
+}
 .markdown > * {
   all: revert;
+}
+.markdown img {
+  border-radius: 3px;
+}
+.markdown p {
+  margin: 0;
 }

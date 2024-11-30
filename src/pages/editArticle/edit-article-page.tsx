@@ -2,7 +2,6 @@ import { useTheme } from "@emotion/react"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Box, Button, CircularProgress, Theme, useMediaQuery } from "@mui/material"
 import clsx from "clsx"
-import { nanoid } from "nanoid"
 import { Fields } from "pages/createArticle/types/types"
 import { Tag } from "pages/createArticle/ui/tag"
 import { schema } from "pages/createArticle/utils/schema"
@@ -32,6 +31,10 @@ const EditArticle: React.FC = (): JSX.Element => {
     control,
     shouldUnregister: true,
   })
+  const handleDelete = (index: number) => {
+    remove(index)
+    setFirstRender(false)
+  }
   const onSubmit = handleSubmit(async (data) => {
     const tags = data.tagList?.map(({ tag }) => tag)
     const { error } = await update({ slug, data: { ...data, tagList: tags } })
@@ -60,33 +63,36 @@ const EditArticle: React.FC = (): JSX.Element => {
                 <div className="flex flex-col gap-5 text-[12px]">
                   <FormField
                     rows={1}
-                    value={data?.article.title}
+                    defaultValue={data?.article.title}
                     placeholder="Title"
                     id="title"
+                    type="edit"
                     error={!!errors.title}
                     errors={errors.title}
-                    register={register("title")}
+                    register={register}
                     name="title"
                   />
                   <FormField
                     rows={1}
                     placeholder="Description"
-                    value={data?.article.description}
+                    defaultValue={data?.article.description}
                     id="description"
+                    type="edit"
                     error={!!errors.description}
                     errors={errors.description}
-                    register={register("description")}
+                    register={register}
                     name="description"
                   />
                   <FormField
                     multiline={true}
                     rows={isMobile ? 5 : 7}
                     placeholder="Text"
-                    value={data?.article.body}
+                    defaultValue={data?.article.body}
                     id="body"
+                    type="edit"
                     error={!!errors.body}
                     errors={errors.body}
-                    register={register("body")}
+                    register={register}
                     name="body"
                   />
                   <div className="w-[100%] relative">
@@ -95,7 +101,8 @@ const EditArticle: React.FC = (): JSX.Element => {
                         <li key={e.id} className="animate-display relative">
                           <label className="inline-block relative">
                             <Tag
-                              remove={remove}
+                              message={errors.tagList?.[index]?.message}
+                              remove={handleDelete}
                               key={e.id}
                               error={!!errors.tagList?.[index]}
                               id={e.id}

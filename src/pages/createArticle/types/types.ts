@@ -1,3 +1,4 @@
+import { SrvRecord } from "dns"
 import { UseFieldArrayRemove, UseFormRegisterReturn, UseFormUnregister } from "react-hook-form"
 
 export interface Tag {
@@ -6,7 +7,8 @@ export interface Tag {
   index: number
   register?: UseFormRegisterReturn
   error: boolean
-  remove: UseFieldArrayRemove | ((index: number) => void)
+  message: string | undefined
+  remove: (index: number) => void
 }
 export interface Fields {
   title: string

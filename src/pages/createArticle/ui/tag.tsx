@@ -3,7 +3,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import { Tag as ITag } from "../types/types"
 import { ErrorMessage } from "shared/ui/error"
 
-export const Tag: React.FC<ITag> = ({ register, remove, index, error }: ITag): JSX.Element => {
+export const Tag: React.FC<ITag> = ({ register, remove, index, error, message }: ITag): JSX.Element => {
   const isMobile = useMediaQuery("(max-width: 480px)")
   return (
     <div className="flex items-center gap-5 p-1">
@@ -23,7 +23,7 @@ export const Tag: React.FC<ITag> = ({ register, remove, index, error }: ITag): J
         }}
         onClick={() => remove(index)}
       ></Button>
-      {error && <ErrorMessage fontsize={12} />}
+      {error && <ErrorMessage message={message} fontsize={12} />}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { ISignIn } from "../types/sign-in-form"
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -7,16 +7,18 @@ import { Box, TextField } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { useGetCurrentUserQuery, useLoginUserMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
-import { ErrorMessage } from "shared/ui/error"
+import { FormField } from "shared/ui/form-field/form-field"
 
 export const SignInForm: React.FC = (): JSX.Element => {
   const [login] = useLoginUserMutation({ fixedCacheKey: "login" })
-  const { refetch: refetchCurrentUser } = useGetCurrentUserQuery(null)
+  const [skip, setSkip] = useState<boolean>(true)
+  const { refetch: refetchCurrentUser } = useGetCurrentUserQuery(null, { skip })
   const [serverError, setServerError] = useState<boolean>(false)
   const navigate = useNavigate()
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<ISignIn>({ resolver: yupResolver(schema) })
 
@@ -28,10 +30,10 @@ export const SignInForm: React.FC = (): JSX.Element => {
         localStorage.setItem("token", userData.user.token)
         try {
           refetchCurrentUser()
+          navigate("/")
         } catch (e) {
           console.log(e)
         }
-        navigate("/")
       } else if (error) {
         setServerError(true)
       }
@@ -39,7 +41,11 @@ export const SignInForm: React.FC = (): JSX.Element => {
       console.log(e)
     }
   })
-
+  useEffect(() => {
+    if (serverError) {
+      setError("email", { message: "Invalid email or password" })
+    }
+  }, [serverError])
   return (
     <Box
       className="animate-display flex flex-col xs:w-[286px] sm:w-[385px] rounded-lg p-8 gap-4 self-center"
@@ -49,36 +55,27 @@ export const SignInForm: React.FC = (): JSX.Element => {
       <form className="flex flex-col gap-7" onSubmit={onSubmit}>
         <div className="flex flex-col gap-4">
           <label htmlFor="email" className="flex flex-col relative">
-            Email adress
-            <TextField
-              {...register("email")}
-              placeholder="email"
+            <FormField
+              register={register}
               name="email"
               id="email"
-              size="small"
+              placeholder="email"
               error={!!errors.email || !!serverError}
+              errors={errors.email}
             />
-            {errors.email || serverError ? (
-              <ErrorMessage
-                message={errors.email ? errors.email?.message : serverError ? "Invalid email or password" : null}
-                fontsize={12}
-              />
-            ) : null}
           </label>
           <label htmlFor="password-input" className="flex flex-col relative">
-            Password
-            <TextField
-              {...register("password")}
-              placeholder="password"
-              size="small"
+            <FormField
+              register={register}
               name="password"
               id="password-input"
+              placeholder="password"
               error={!!errors.password || !!serverError}
+              errors={errors.password}
             />
-            {errors.password && <ErrorMessage message={errors.password.message} fontsize={12} />}
           </label>
         </div>
-        <ColorButton variant="contained" className="h-11" type="submit">
+        <ColorButton variant="contained" className="h-11" type="submit" onClick={() => setSkip(false)}>
           Login
         </ColorButton>
       </form>

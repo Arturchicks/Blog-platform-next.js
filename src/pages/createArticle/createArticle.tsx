@@ -66,7 +66,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                 id="title"
                 error={!!errors.title}
                 errors={errors.title}
-                register={register("title")}
+                register={register}
                 name="title"
               />
               <FormField
@@ -75,7 +75,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                 id="description"
                 error={!!errors.description}
                 errors={errors.description}
-                register={register("description")}
+                register={register}
                 name="description"
               />
               <FormField
@@ -85,7 +85,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                 id="body"
                 error={!!errors.body}
                 errors={errors.body}
-                register={register("body")}
+                register={register}
                 name="body"
               />
               <div className="w-[100%] relative">
@@ -96,6 +96,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
                         <Tag
                           remove={handleDelete}
                           key={e.id}
+                          message={errors.tagList?.[index]?.message}
                           id={e.id}
                           error={!!errors.tagList?.[index]}
                           index={index}

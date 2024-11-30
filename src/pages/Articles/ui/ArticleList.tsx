@@ -70,7 +70,7 @@ export const ArticleList: React.FC = () => {
               page={page.current}
               sx={{
                 "& .MuiPaginationItem-root:hover": {
-                  backgroundColor: isPointer ? "rgba(0, 0, 0, 0.08)" : null,
+                  backgroundColor: !isPointer ? "rgba(0, 0, 0, 0.08)" : null,
                 },
               }}
             />

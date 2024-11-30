@@ -192,7 +192,9 @@ export const EditUser: React.FC = (): JSX.Element => {
             )}
             {imageName && (
               <div className="flex gap-1 items-center animate-display mx-auto">
-                <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis">{imageName}</span>
+                <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
+                  {imageName}
+                </span>
                 <img src={image as string} className="w-9 h-9 rounded-[50%]" alt="avatar" />
                 <Button
                   color="error"

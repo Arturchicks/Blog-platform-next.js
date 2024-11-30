@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import clsx from "clsx"
 
 export const Tags: React.FC<Pick<IArticle, "tagList">> = ({ tagList }) => {
-  const regex = /[a-zабвгдеёжзийклмнопрстуфхцчшщъыьэюя]/i
+  const regex = /[a-zабвгдеёжзийклмнопрстуфхцчшщъыьэюя0-9]/i
   const isHoverSupported = useMediaQuery("(hover: hover) and (pointer: fine)")
   return (
     <Box className="flex gap-1 max-w-[100%]">
