@@ -134,7 +134,7 @@ export const ArticlePage: React.FC = () => {
           <Markdown className="markdown">{data.article.body}</Markdown>
         </section>
       </div>
-      {userData && <Comments />}
+      <Comments data={!!userData} />
       {comments?.comments.map((e: CommentType) => <Comment {...e} username={userData?.user.username} key={e.id} />)}
     </Box>
   )
