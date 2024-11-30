@@ -75,7 +75,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
       <Box>
         <Box className="flex w-[100%] justify-between items-center max-h-[42px]">
           <Box className="flex max-w-[60%] items-center">
-            <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap">
+            <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap capitalize">
               {props.title.trim() || "Untitled"}
             </h3>
             <Favorites
