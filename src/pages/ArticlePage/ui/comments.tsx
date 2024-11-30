@@ -104,7 +104,7 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
                 <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
                   {imageName}
                 </span>
-                <img src={image as string} className="w-9 h-9 rounded-[50%]" alt="avatar" />
+                <img src={image as string} className="min-w-[36px] min-h-[36px] rounded-[50%]" alt="avatar" />
                 <Button
                   color="error"
                   startIcon={<DeleteIcon />}
