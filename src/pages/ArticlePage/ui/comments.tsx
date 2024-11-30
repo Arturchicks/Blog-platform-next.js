@@ -54,84 +54,79 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
   })
 
   return (
-    <section className="mb-5 mt-5">
-      {userData && (
-        <form onSubmit={onSubmit} className="relative">
-          <FormField
-            error={!!errors.body}
-            errors={errors.body}
-            id="comment"
-            name="body"
-            type="comment"
-            rows={4}
-            isSubmitted={isSubmitted}
-            multiline={true}
-            placeholder="Add comment..."
-            register={registerComment}
-          />
-          <div className="flex items-center mt-2 gap-1 justify-between min-h-[37px]">
-            <Button
-              component="label"
-              role={undefined}
-              color="info"
-              variant="text"
-              tabIndex={-1}
-              startIcon={<AddPhotoAlternateIcon />}
-              sx={{
-                "& .MuiButton-startIcon": {
-                  margin: 0,
-                },
-                justifyContent: "center",
-              }}
-            >
-              <VisuallyHiddenInput
-                type="file"
-                {...registerComment("image", {
-                  onChange: (e) => handleImg(e),
-                })}
-              />
-            </Button>
-            {errors.image && (
-              <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.image?.message}</p>
-            )}
-            {(body?.trim() || image) && (
-              <Button variant="text" color="info" type="submit" className="animate-display">
-                Submit
-              </Button>
-            )}
-          </div>
-          {image && (
-            <div className="flex gap-1 items-center animate-display absolute">
-              <img src={image as string} className="min-w-[60px] max-h-[127px] rounded-[3px] relative" alt="avatar" />
+    <>
+      <section className="mb-5 mt-5">
+        {userData && (
+          <form onSubmit={onSubmit} className="relative">
+            <FormField
+              error={!!errors.body}
+              errors={errors.body}
+              id="comment"
+              name="body"
+              type="comment"
+              rows={4}
+              isSubmitted={isSubmitted}
+              multiline={true}
+              placeholder="Add comment..."
+              register={registerComment}
+            />
+            <div className="flex items-center mt-2 gap-1 justify-between min-h-[37px]">
               <Button
-                variant="contained"
-                startIcon={<ClearIcon className="text-gray-600" />}
-                onClick={handleDeleteImg}
+                component="label"
+                role={undefined}
+                color="info"
+                variant="text"
+                tabIndex={-1}
+                startIcon={<AddPhotoAlternateIcon />}
                 sx={{
-                  position: "absolute",
-                  top: 5,
-                  right: 5,
                   "& .MuiButton-startIcon": {
                     margin: 0,
                   },
-                  "&.MuiButton-root": {
-                    padding: 0,
-                    minWidth: "auto",
-                  },
+                  justifyContent: "center",
                 }}
-              />
+              >
+                <VisuallyHiddenInput
+                  type="file"
+                  {...registerComment("image", {
+                    onChange: (e) => handleImg(e),
+                  })}
+                />
+              </Button>
+              {errors.image && (
+                <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.image?.message}</p>
+              )}
+              {(body?.trim() || image) && (
+                <Button variant="text" color="info" type="submit" className="animate-display">
+                  Submit
+                </Button>
+              )}
             </div>
-          )}
-        </form>
-      )}
-      <Box className="w-[100%] h-[1px] mt-36" sx={{ borderTop: "1px solid", borderColor: "text.secondary" }} />
-      <Box className="text-[20px] font-extralight flex items-center gap-2 mt-3">
-        <span>Comments</span>
-        <span className="inline-block min-w-6 h-5 rounded-xl bg-[#1890ff] text-[12px] text-center p-[2px]">
-          {comments?.comments.length}
-        </span>
-      </Box>
-    </section>
+            {image && (
+              <div className="flex gap-1 w-fit items-center animate-display relative">
+                <img src={image as string} className="min-w-[60px] max-h-[127px] rounded-[3px]" alt="avatar" />
+                <Button
+                  variant="contained"
+                  startIcon={<ClearIcon className="text-gray-600" />}
+                  onClick={handleDeleteImg}
+                  sx={{
+                    position: "absolute",
+                    top: 5,
+                    right: 5,
+                    "& .MuiButton-startIcon": {
+                      margin: 0,
+                    },
+                    "&.MuiButton-root": {
+                      padding: 0,
+                      minWidth: "auto",
+                    },
+                  }}
+                />
+              </div>
+            )}
+          </form>
+        )}
+      </section>
+    </>
   )
 }
 export default Comments

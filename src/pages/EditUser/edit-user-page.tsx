@@ -16,13 +16,11 @@ import * as imageConversion from "image-conversion"
 
 export const EditUser: React.FC = (): JSX.Element => {
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
-  const [imageName, setImageName] = useState<string | null>(null)
   const [serverError, setServerError] = useState<Error | null>(null)
 
   const handleImg = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target as HTMLInputElement
     if (files?.[0]) {
-      setImageName(files?.[0].name)
       const compressedImg = await imageConversion.compressAccurately(files[0], 50)
       const dataUrl = await imageConversion.filetoDataURL(compressedImg)
       setImage(dataUrl)
@@ -40,7 +38,6 @@ export const EditUser: React.FC = (): JSX.Element => {
   const handleDeleteImg = () => {
     setValue("image", undefined)
     setImage(null)
-    setImageName(null)
   }
 
   const [edit, { isError }] = useEditProfileMutation()
@@ -164,7 +161,7 @@ export const EditUser: React.FC = (): JSX.Element => {
               <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.imageUrl?.message}</p>
             )}
           </label>
-          <div className="h-[72px] flex items-start gap-2 flex-wrap">
+          <div className="h-[72px] flex items-center gap-2">
             <Button
               component="label"
               role={undefined}
@@ -187,12 +184,9 @@ export const EditUser: React.FC = (): JSX.Element => {
             {errors.image && (
               <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.image?.message}</p>
             )}
-            {imageName && (
-              <div className="flex gap-1 items-center animate-display mx-auto">
-                <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                  {imageName}
-                </span>
-                <img src={image as string} className="w-9 h-9 rounded-[50%]" alt="avatar" />
+            {image && (
+              <div className="flex gap-1 items-center animate-display">
+                <img src={image as string} className="w-12 h-12 rounded-[50%]" alt="avatar" />
                 <Button
                   color="error"
                   startIcon={<DeleteIcon />}

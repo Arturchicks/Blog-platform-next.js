@@ -3,13 +3,15 @@ import { IArticle } from "../../types/types"
 import Favorites from "./ui/favorites"
 import { Tags } from "./ui/tagList"
 import { useSetLikeMutation } from "shared/redux/api"
-import { Box, CircularProgress, useMediaQuery } from "@mui/material"
+import { Box, CircularProgress, Theme, useMediaQuery } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import clsx from "clsx"
 import { useDispatch, useSelector } from "react-redux"
 import { store } from "shared/redux"
 import { change } from "shared/redux/local"
 import { format } from "date-fns"
+import { useTheme } from "@emotion/react"
+import { text } from "stream/consumers"
 
 const avatar = require("../../../../shared/assets/avatar.png")
 
@@ -23,7 +25,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const isPointer = useMediaQuery("(pointer: fine)")
-
+  const theme = useTheme() as Theme
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined
     if (changed.includes(props.slug)) {
@@ -70,7 +72,11 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         "flex flex-col justify-between cursor-pointer xs:h-[120px] xs:p-[2vw] sm:p-[15px] sm:h-[160px] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden",
         isPointer ? "hover:bg-[#636a8d1c]" : null
       )}
-      sx={{ backgroundColor: "primary.main", color: "secondary.main" }}
+      sx={{
+        backgroundColor: "primary.main",
+        color: "secondary.main",
+        boxShadow: `0px 0px 5px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
+      }}
     >
       <Box>
         <Box className="flex w-[100%] justify-between items-center max-h-[42px]">
@@ -105,7 +111,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
                 onLoad={() => setLoad(true)}
                 alt="avatar"
                 style={{ display: load ? "block" : "none" }}
-                className="xs:w-[46px] xs:h-[46px] sm:w-[46px] sm:h-[46px] lg:w-[56px] lg:h-[56px] rounded-[50%] animate-display"
+                className="xs:w-[46px] xs:h-[46px] sm:w-[46px] sm:h-[46px] lg:w-[56px] lg:h-[56px] rounded-[50%] animate-display border-[2px] border-solid border-[#b3aaaa]"
               />
             </div>
           </Box>

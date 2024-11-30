@@ -55,11 +55,11 @@ const CreateArticle: React.FC = (): JSX.Element => {
         color: "secondary.main",
       }}
     >
-      <h3 className="text-center font-Roboto">Create new article</h3>
+      <h3 className="text-center font-Roboto text-clamp-xl">Create new article</h3>
       <form className="flex flex-col gap-5 relative" id="create-article-form" onSubmit={onSubmit}>
         <div className="flex flex-col gap-12">
           <fieldset>
-            <div className="flex flex-col gap-5 text-[12px]">
+            <div className="flex flex-col gap-5">
               <FormField
                 rows={1}
                 placeholder="Title"

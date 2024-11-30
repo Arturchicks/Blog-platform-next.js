@@ -6,7 +6,7 @@ import { Box } from "@mui/material"
 
 const App: React.FC = () => {
   return (
-    <Box className="flex flex-col gap-5 flex-1 pb-2" sx={{ bgcolor: "background.default" }}>
+    <Box className="flex flex-col gap-5 flex-1 pb-5" sx={{ bgcolor: "background.default" }}>
       <ErrorBoundary>
         <Header />
         <Outlet />

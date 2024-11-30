@@ -91,9 +91,9 @@ export const AppHeader: React.FC = () => {
                   src={data.user.image || avatar}
                   alt="avatar"
                   className={clsx(
-                    "w-12 h-12",
+                    "xs:w-12 xs:h-12 lg:w-14 lg:h-14",
                     isPointer ? "hover:opacity-50 transition-opacity duration-200 ease-in-out" : null,
-                    "rounded-[50%]"
+                    "rounded-[50%] border-[2px] border-solid border-gray-400"
                   )}
                 />
               </Link>
