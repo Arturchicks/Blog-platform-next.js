@@ -19,7 +19,7 @@ export const Tags: React.FC<Pick<IArticle, "tagList">> = ({ tagList }) => {
               <Link
                 to={`/articles/tag/${e}`}
                 className={clsx(
-                  "border rounded-[4px] font-sans text-[12px] p-[1px] pl-1 pr-1 max-w-[100%] whitespace-nowrap",
+                  "border rounded-[4px] font-sans text-[10px] p-[1px] pl-1 pr-1 max-w-[100%] whitespace-nowrap",
                   isHoverSupported && "hover:opacity-70",
                   "inline-block overflow-hidden text-ellipsis"
                 )}

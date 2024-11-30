@@ -119,7 +119,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         <Tags tagList={props.tagList} />
       </Box>
       <Box className="overflow-hidden">
-        <p className="h-[25px] overflow-hidden text-ellipsis text-[12px]">{props.description}</p>
+        <p className="h-[25px] overflow-hidden text-ellipsis text-[16px]">{props.description}</p>
       </Box>
     </Box>
   )
