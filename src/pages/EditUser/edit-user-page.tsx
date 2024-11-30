@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { ChangeEvent, useState } from "react"
 import { Box, TextField, Button } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { schema } from "./utils/schema"
@@ -12,25 +12,22 @@ import { IEditUser } from "./types/types"
 import DeleteIcon from "@mui/icons-material/Delete"
 import clsx from "clsx"
 import { Error } from "./types/types"
+import * as imageConversion from "image-conversion"
 
 export const EditUser: React.FC = (): JSX.Element => {
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
   const [imageName, setImageName] = useState<string | null>(null)
   const [serverError, setServerError] = useState<Error | null>(null)
-  const handleImg = (e: Event) => {
+
+  const handleImg = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target as HTMLInputElement
     if (files?.[0]) {
       setImageName(files?.[0].name)
-      console.log(files?.[0])
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImage(reader.result)
-      }
-      reader.onerror = () => console.log("aborted")
-      reader.readAsDataURL(files[0])
+      const compressedImg = await imageConversion.compressAccurately(files[0], 50)
+      const dataUrl = await imageConversion.filetoDataURL(compressedImg)
+      setImage(dataUrl)
     }
   }
-
   const {
     register,
     handleSubmit,

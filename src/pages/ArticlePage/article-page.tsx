@@ -69,7 +69,7 @@ export const ArticlePage: React.FC = () => {
         <Box className="flex flex-col rounded-xl  font-sans animate-display overflow-hidden p-1">
           <Box className="flex w-[100%] justify-between">
             <Box className="flex max-w-[60%] items-center sm:w-auto">
-              <h3 className="text-[#1890FF] text-xl inline-block s:whitespace-nowrap text-clamp-xl max-h-[100%] max-w-[100%] text-ellipsis overflow-hidden">
+              <h3 className="text-[#1890FF] text-xl inline-block s:whitespace-nowrap text-clamp-xl max-h-[100%] max-w-[100%] text-ellipsis overflow-hidden capitalize">
                 {data.article.title.trim() || "Untitled"}
               </h3>
               <Favorites
