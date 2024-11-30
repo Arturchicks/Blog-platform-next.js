@@ -78,7 +78,9 @@ body {
 }
 .markdown img {
   border-radius: 3px;
+  max-width: 50%;
 }
 .markdown p {
   margin: 0;
+  word-break: break-word;
 }

@@ -11,12 +11,13 @@ import {
 } from "shared/redux/api"
 import { CircularProgress, Box, Button } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { store } from "shared/redux"
 import { format } from "date-fns"
 import Comments from "./ui/comments"
 import Comment from "./ui/comment"
 import { CommentType } from "shared/redux/types"
+import { change } from "shared/redux/local"
 
 const avatar = require("../../shared/assets/avatar.png")
 
@@ -26,7 +27,7 @@ export const ArticlePage: React.FC = () => {
   const { data: comments } = useGetCommentsQuery(`${slug}`)
   const { data: userData } = useGetCurrentUserQuery(null)
   const [load, setLoad] = useState<boolean>(false)
-  const [image, setImage] = useState<string | undefined>(data?.article.author.image)
+  const [image, setImage] = useState<string | undefined>()
   const { changed } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
   const [setLike] = useSetLikeMutation()
   const [del] = useDeleteArticleMutation()
@@ -35,18 +36,28 @@ export const ArticlePage: React.FC = () => {
     const { data, error } = await del(slug)
     if (!error) navigate("/articles")
   }
+  const dispatch = useDispatch()
   useEffect(() => {
+    let timer: NodeJS.Timeout | undefined
     if (slug) {
       if (changed.includes(slug)) {
-        setImage(avatar)
         setLoad(true)
+        setImage(avatar)
       } else {
-        if (data?.article.author.image) setImage(data.article.author.image)
+        if (!load) {
+          timer = setTimeout(() => {
+            setImage(avatar)
+            dispatch(change(slug))
+          }, 2000)
+        }
       }
     }
-    console.log(comments)
-  }, [data, comments])
-
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
+    }
+  }, [load, data])
   return !data ? (
     <CircularProgress className="mx-auto" />
   ) : (
@@ -81,7 +92,7 @@ export const ArticlePage: React.FC = () => {
               <div className="min-h-[46px] min-w-[46px] max-w-[46px] max-h-[46px]">
                 {!load && <CircularProgress color="info" />}
                 <img
-                  src={image}
+                  src={image || data.article.author.image}
                   onLoad={() => setLoad(true)}
                   alt="avatar"
                   style={{ display: load ? "block" : "none" }}

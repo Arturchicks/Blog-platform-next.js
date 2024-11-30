@@ -49,7 +49,7 @@ const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element =>
             />
           )}
         </div>
-        <Markdown className="text-[14px] m-0 break-all markdown max-w-[50%]">{props.body}</Markdown>
+        <Markdown className="text-[14px] m-0 markdown">{props.body}</Markdown>
       </div>
     </div>
   )
