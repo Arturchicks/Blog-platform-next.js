@@ -7,7 +7,7 @@ import { Theme, useColorScheme } from "@mui/material/styles"
 import clsx from "clsx"
 import { MaterialUISwitch } from "shared/ui/toggleTheme/ui/Toggle"
 import { useTheme } from "@emotion/react"
-
+const avatar = require("../assets/avatar.png")
 export const AppHeader: React.FC = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -88,7 +88,7 @@ export const AppHeader: React.FC = () => {
                 }}
               >
                 <img
-                  src={data.user.image}
+                  src={data.user.image || avatar}
                   alt="avatar"
                   className={clsx(
                     "w-12 h-12",
