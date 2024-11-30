@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom"
 import { Box } from "@mui/material"
 import { VisuallyHiddenInput } from "pages/EditUser/ui/visibilityHiddenInput"
 import DeleteIcon from "@mui/icons-material/Delete"
-
+import ClearIcon from "@mui/icons-material/Clear"
 const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element => {
   const { slug } = useParams()
   const { data: comments } = useGetCommentsQuery(`${slug}`)
@@ -61,7 +61,7 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
   return (
     <section className="mb-5 mt-5">
       {userData && (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} className="relative">
           <FormField
             error={!!errors.body}
             errors={errors.body}
@@ -99,37 +99,37 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
             {errors.image && (
               <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.image?.message}</p>
             )}
-            {imageName && (
-              <div className="flex gap-1 items-center animate-display">
-                <span className="inline-block max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap">
-                  {imageName}
-                </span>
-                <img src={image as string} className="min-w-[36px] min-h-[36px] rounded-[50%]" alt="avatar" />
-                <Button
-                  color="error"
-                  startIcon={<DeleteIcon />}
-                  onClick={handleDeleteImg}
-                  sx={{
-                    "& .MuiButton-startIcon": {
-                      margin: 0,
-                    },
-                    "&.MuiButton-root": {
-                      padding: 0,
-                      minWidth: "auto",
-                    },
-                  }}
-                />
-              </div>
-            )}
             {(body?.trim() || image) && (
               <Button variant="text" color="info" type="submit" className="animate-display">
                 Submit
               </Button>
             )}
           </div>
+          {imageName && (
+            <div className="flex gap-1 items-center animate-display absolute">
+              <img src={image as string} className="min-w-[60px] max-h-[127px] rounded-[3px] relative" alt="avatar" />
+              <Button
+                variant="contained"
+                startIcon={<ClearIcon className="text-gray-600" />}
+                onClick={handleDeleteImg}
+                sx={{
+                  position: "absolute",
+                  top: 5,
+                  right: 5,
+                  "& .MuiButton-startIcon": {
+                    margin: 0,
+                  },
+                  "&.MuiButton-root": {
+                    padding: 0,
+                    minWidth: "auto",
+                  },
+                }}
+              />
+            </div>
+          )}
         </form>
       )}
-      <Box className="w-[100%] h-[1px] mt-7" sx={{ borderTop: "1px solid", borderColor: "text.secondary" }} />
+      <Box className="w-[100%] h-[1px] mt-36" sx={{ borderTop: "1px solid", borderColor: "text.secondary" }} />
       <Box className="text-[20px] font-extralight flex items-center gap-2 mt-3">
         <span>Comments</span>
         <span className="inline-block min-w-6 h-5 rounded-xl bg-[#1890ff] text-[12px] text-center p-[2px]">
