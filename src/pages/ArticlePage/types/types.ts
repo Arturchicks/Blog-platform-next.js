@@ -3,3 +3,8 @@ export interface IComment {
     body: string
   }
 }
+export interface CommentForm {
+  body?: string | undefined
+  image?: string | undefined
+  imageHash?: string | undefined
+}

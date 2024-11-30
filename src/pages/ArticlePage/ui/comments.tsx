@@ -9,14 +9,25 @@ import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate"
 import { useParams } from "react-router-dom"
 import { Box } from "@mui/material"
 import { VisuallyHiddenInput } from "pages/EditUser/ui/visibilityHiddenInput"
-import DeleteIcon from "@mui/icons-material/Delete"
 import ClearIcon from "@mui/icons-material/Clear"
+import { CommentForm } from "../types/types"
+import * as imageConversion from "image-conversion"
+
 const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element => {
   const { slug } = useParams()
   const { data: comments } = useGetCommentsQuery(`${slug}`)
   const [comment] = useCreateCommentMutation()
-  const [imageName, setImageName] = useState<string | null>(null)
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
+  const handleImg = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target as HTMLInputElement
+    if (files?.[0]) {
+      const compressedImg = await imageConversion.compressAccurately(files[0], 50)
+      const dataUrl = await imageConversion.filetoDataURL(compressedImg)
+      setImage(dataUrl)
+      setValue("imageHash", `![img](${dataUrl})`)
+      clearErrors("body")
+    }
+  }
   const {
     handleSubmit,
     register: registerComment,
@@ -26,13 +37,11 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
     setError,
     clearErrors,
     watch,
-    resetField,
-  } = useForm({ resolver: yupResolver(schema) })
+  } = useForm<CommentForm>({ resolver: yupResolver(schema) })
   const handleDeleteImg = () => {
     setValue("image", undefined)
     setValue("imageHash", undefined)
     setImage(null)
-    setImageName(null)
   }
   const body = watch("body")
   const onSubmit = handleSubmit(async (data) => {
@@ -43,20 +52,6 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
       handleDeleteImg()
     }
   })
-  const handleImg = (e: ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target as HTMLInputElement
-    if (files?.[0]) {
-      setImageName(files?.[0].name)
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImage(reader.result)
-        setValue("imageHash", `![img](${reader.result as string})`)
-      }
-      reader.onerror = () => console.log("aborted")
-      reader.readAsDataURL(files[0])
-      clearErrors("body")
-    }
-  }
 
   return (
     <section className="mb-5 mt-5">
@@ -105,7 +100,7 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
               </Button>
             )}
           </div>
-          {imageName && (
+          {image && (
             <div className="flex gap-1 items-center animate-display absolute">
               <img src={image as string} className="min-w-[60px] max-h-[127px] rounded-[3px] relative" alt="avatar" />
               <Button

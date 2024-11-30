@@ -7,7 +7,7 @@ import { CommentType } from "shared/redux/types"
 import Markdown from "react-markdown"
 import DeleteIcon from "@mui/icons-material/Delete"
 import clsx from "clsx"
-import { debounce } from "../utils/debounce"
+import { debounce } from "shared/lib/debounce"
 
 const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element => {
   const { slug } = useParams()

@@ -79,6 +79,7 @@ body {
   word-break: break-word;
 }
 .markdown img {
+  margin-top: 5px;
   border-radius: 3px;
   max-width: 50%;
 }
