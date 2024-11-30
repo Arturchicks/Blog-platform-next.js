@@ -11,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useGetArticleQuery, useUpdateArticleMutation } from "shared/redux/api"
 import { FormField } from "shared/ui/form-field/form-field"
 import { ColorButton } from "shared/ui/signButton"
+import LocalOfferIcon from "@mui/icons-material/LocalOffer"
 
 const EditArticle: React.FC = (): JSX.Element => {
   const { slug } = useParams()
@@ -54,6 +55,7 @@ const EditArticle: React.FC = (): JSX.Element => {
           sx={{
             bgcolor: "primary.main",
             color: "secondary.main",
+            boxShadow: `0px 0px 3px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
           }}
         >
           <h3 className="text-center font-Roboto">Edit article</h3>
@@ -127,10 +129,11 @@ const EditArticle: React.FC = (): JSX.Element => {
             <Button
               variant="outlined"
               color="info"
+              startIcon={<LocalOfferIcon />}
               sx={{
                 position: "absolute",
                 bottom: "15%",
-                maxWidth: "86px",
+                maxWidth: "95px",
                 whiteSpace: "nowrap",
                 textTransform: "capitalize",
                 fontSize: isMobile ? "12px" : null,

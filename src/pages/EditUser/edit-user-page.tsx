@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react"
-import { Box, TextField, Button } from "@mui/material"
+import { Box, TextField, Button, Theme } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { schema } from "./utils/schema"
 import { useForm } from "react-hook-form"
@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import clsx from "clsx"
 import { Error } from "./types/types"
 import * as imageConversion from "image-conversion"
+import { useTheme } from "@emotion/react"
 
 export const EditUser: React.FC = (): JSX.Element => {
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
@@ -39,7 +40,7 @@ export const EditUser: React.FC = (): JSX.Element => {
     setValue("image", undefined)
     setImage(null)
   }
-
+  const theme = useTheme() as Theme
   const [edit, { isError }] = useEditProfileMutation()
   const { data: userData } = useGetCurrentUserQuery(null, { skip: isError })
   const navigate = useNavigate()
@@ -75,7 +76,11 @@ export const EditUser: React.FC = (): JSX.Element => {
         " xs:w-[75vw] s:w-[330px] rounded p-7 flex flex-col self-center animate-display relative",
         errors.manual ? "outline outline-1 outline-red-600" : "outline-none"
       )}
-      sx={{ bgcolor: "primary.main", color: "secondary.main" }}
+      sx={{
+        bgcolor: "primary.main",
+        color: "secondary.main",
+        boxShadow: `0px 0px 4px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
+      }}
     >
       <Box className="text-center relative h-[45px] flex justify-center">
         {errors.manual && (

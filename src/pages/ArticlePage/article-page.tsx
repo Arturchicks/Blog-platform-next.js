@@ -19,7 +19,8 @@ import Comment from "./ui/comment"
 import { CommentType } from "shared/redux/types"
 import { change } from "shared/redux/local"
 import { useTheme } from "@emotion/react"
-
+import CreateIcon from "@mui/icons-material/Create"
+import DeleteIcon from "@mui/icons-material/Delete"
 const avatar = require("../../shared/assets/avatar.png")
 
 export const ArticlePage: React.FC = () => {
@@ -69,7 +70,7 @@ export const ArticlePage: React.FC = () => {
       sx={{
         bgcolor: "primary.main",
         color: "secondary.main",
-        boxShadow: `0px 0px 5px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
+        boxShadow: `0px 0px 3px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
       }}
     >
       <section>
@@ -121,6 +122,7 @@ export const ArticlePage: React.FC = () => {
                 <Button
                   color="error"
                   variant="outlined"
+                  startIcon={<DeleteIcon />}
                   aria-describedby="delete"
                   sx={{ textTransform: "capitalize" }}
                   onClick={handleDelete}
@@ -130,6 +132,7 @@ export const ArticlePage: React.FC = () => {
                 <Button
                   color="success"
                   variant="outlined"
+                  startIcon={<CreateIcon />}
                   sx={{ textTransform: "capitalize" }}
                   onClick={() => navigate(`/edit-article/${slug}`)}
                 >

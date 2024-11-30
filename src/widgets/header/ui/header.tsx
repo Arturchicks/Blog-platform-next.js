@@ -7,6 +7,14 @@ import { Theme, useColorScheme } from "@mui/material/styles"
 import clsx from "clsx"
 import { MaterialUISwitch } from "shared/ui/toggleTheme/ui/Toggle"
 import { useTheme } from "@emotion/react"
+import LogoutIcon from "@mui/icons-material/Logout"
+import AddIcon from "@mui/icons-material/Add"
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt"
+import LoginIcon from "@mui/icons-material/Login"
+import PublicIcon from "@mui/icons-material/Public"
+import { IoPlanetSharp } from "react-icons/io5"
+import { StyledMenu } from "shared/ui/styledMenu"
+
 const avatar = require("../assets/avatar.png")
 export const AppHeader: React.FC = () => {
   const dispatch = useDispatch()
@@ -32,26 +40,27 @@ export const AppHeader: React.FC = () => {
         sx={{
           bgcolor: "primary.main",
           color: "secondary.main",
-          boxShadow: `.5px .2px 0px ${theme.palette.text.primary}`,
+          boxShadow: `0 -2px 5px ${theme.palette.text.primary}`,
           zIndex: 1,
         }}
       >
         <Box className={clsx("flex flex-wrap items-center justify-center")}>
           <Link to={"/articles"} onClick={() => dispatch(baseApi.util.invalidateTags(["Article"]))}>
-            <span className="xs:text-[10px] s:text-[12px] sm:text-[16px] text-clip whitespace-nowrap">
-              RealWorld Blog
+            <span className="flex xs:text-[10px] s:text-[12px] sm:text-[18px] text-clip whitespace-nowrap align-middle text-[#7b7878]">
+              RealW{<IoPlanetSharp className="self-center" />}rld Blog
             </span>
           </Link>
           <MaterialUISwitch onClick={() => setMode(mode === "dark" ? "light" : "dark")} checked={mode === "dark"} />
         </Box>
         {!data && !token && (
           <Box className="flex gap-4 animate-display">
-            <Button color="info" onClick={() => navigate("/sign-in")}>
+            <Button color="info" onClick={() => navigate("/sign-in")} endIcon={<LoginIcon />}>
               Sign In
             </Button>
             <Button
               color="success"
               onClick={() => navigate("/sign-up")}
+              endIcon={<PersonAddAltIcon />}
               variant="outlined"
               sx={{ textTransform: "capitalize" }}
             >
@@ -64,6 +73,7 @@ export const AppHeader: React.FC = () => {
             {pathname !== "/create-article" && (
               <Button
                 variant="outlined"
+                startIcon={<AddIcon />}
                 onClick={() => navigate("/create-article")}
                 color="success"
                 className="whitespace-nowrap animate-display"
@@ -103,6 +113,7 @@ export const AppHeader: React.FC = () => {
               onClick={handleLogOut}
               color="info"
               className="whitespace-nowrap animate-display"
+              startIcon={<LogoutIcon />}
               sx={{
                 textTransform: "capitalize",
                 fontSize: isMobile ? "12px" : "clamp(12px, 1vw, 1rem)",

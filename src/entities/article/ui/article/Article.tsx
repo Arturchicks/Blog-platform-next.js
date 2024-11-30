@@ -75,7 +75,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
       sx={{
         backgroundColor: "primary.main",
         color: "secondary.main",
-        boxShadow: `0px 0px 5px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
+        boxShadow: `0px 0px 3px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
       }}
     >
       <Box>

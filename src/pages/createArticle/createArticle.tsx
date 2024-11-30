@@ -12,7 +12,7 @@ import { Fields } from "./types/types"
 import clsx from "clsx"
 import { FormField } from "shared/ui/form-field/form-field"
 import { Tag } from "./ui/tag"
-
+import LocalOfferIcon from "@mui/icons-material/LocalOffer"
 const CreateArticle: React.FC = (): JSX.Element => {
   const navigate = useNavigate()
   const [firstRender, setFirstRender] = useState<boolean>(true)
@@ -41,11 +41,6 @@ const CreateArticle: React.FC = (): JSX.Element => {
     remove(index)
     setFirstRender(false)
   }
-  useEffect(() => {
-    isMobile
-      ? document.documentElement.style.setProperty("--width", "77.83px")
-      : document.documentElement.style.setProperty("--width", "86px")
-  }, [isMobile])
 
   return (
     <Box
@@ -53,6 +48,7 @@ const CreateArticle: React.FC = (): JSX.Element => {
       sx={{
         bgcolor: "primary.main",
         color: "secondary.main",
+        boxShadow: `0px 0px 3px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
       }}
     >
       <h3 className="text-center font-Roboto text-clamp-xl">Create new article</h3>
@@ -120,10 +116,11 @@ const CreateArticle: React.FC = (): JSX.Element => {
         <Button
           variant="outlined"
           color="info"
+          startIcon={<LocalOfferIcon />}
           sx={{
             position: "absolute",
             bottom: "15%",
-            maxWidth: "86px",
+            maxWidth: "95px",
             whiteSpace: "nowrap",
             textTransform: "capitalize",
             fontSize: isMobile ? "12px" : null,
