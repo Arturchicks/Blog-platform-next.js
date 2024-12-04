@@ -134,7 +134,7 @@ export const EditUser: React.FC = (): JSX.Element => {
           errors={errors.imageUrl}
           register={register}
         />
-        <div className="h-[72px] flex items-center gap-2 justify-between">
+        <div className="h-[72px] flex items-center gap-10">
           <Button
             component="label"
             role={undefined}

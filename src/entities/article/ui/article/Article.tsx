@@ -46,7 +46,6 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
 
   useEffect(() => {
     if (result.isSuccess) {
-      console.log(result)
       setFavorited(result.data?.article.favorited)
       setFavoritesCount(result.data?.article.favoritesCount)
     }
@@ -54,7 +53,6 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { tagName } = e.target as HTMLElement
-    console.log(tagName)
     if (tagName === "INPUT" || tagName === "A") {
       e.preventDefault()
       return

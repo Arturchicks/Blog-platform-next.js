@@ -30,7 +30,7 @@ export const AppHeader: React.FC = () => {
     localStorage.removeItem("token")
     navigate("/")
   }, [])
-
+  console.log("header")
   return (
     <Box className="h-[80px]">
       <Box
@@ -81,7 +81,7 @@ export const AppHeader: React.FC = () => {
                 startIcon={<AddIcon />}
                 onClick={() => navigate("/create-article")}
                 color="success"
-                className="whitespace-nowrap animate-display"
+                className="whitespace-nowrap"
                 sx={{
                   textTransform: "capitalize",
                   fontSize: isMobile ? "12px" : "clamp(12px, 1vw, 1rem)",
@@ -117,7 +117,7 @@ export const AppHeader: React.FC = () => {
               variant="outlined"
               onClick={handleLogOut}
               color="info"
-              className="whitespace-nowrap animate-display"
+              className="whitespace-nowrap"
               startIcon={<LogoutIcon />}
               sx={{
                 textTransform: "capitalize",
