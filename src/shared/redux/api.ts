@@ -27,7 +27,8 @@ export const baseApi = createApi({
   tagTypes: ["Article", "User", "ArticlePage", "Comments"],
   endpoints: (builder) => ({
     getArticles: builder.query<QueryArticles, QueryArgs>({
-      query: ({ offset, tag }) => (!tag ? `articles?offset=${offset}` : `articles?tag=${tag}`),
+      query: ({ offset, tag, username }) =>
+        !tag ? (!username ? `articles?offset=${offset}` : `articles?author=${username}`) : `articles?tag=${tag}`,
       providesTags: ["Article"],
     }),
     getArticle: builder.query<QueryArticle, string>({

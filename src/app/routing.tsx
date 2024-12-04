@@ -7,6 +7,7 @@ import CreateArticle from "pages/createArticle/createArticle"
 import { ArticlePage } from "pages/ArticlePage/article-page"
 import { EditUser } from "pages/EditUser/edit-user-page"
 import EditArticle from "pages/editArticle/edit-article-page"
+import path from "path"
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "tag/:tag",
+            element: <Articles />,
+          },
+          {
+            path: "author/:author",
             element: <Articles />,
           },
         ],

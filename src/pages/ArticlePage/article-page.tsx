@@ -8,6 +8,7 @@ import {
   useSetLikeMutation,
   useDeleteArticleMutation,
   useGetCommentsQuery,
+  useGetArticlesQuery,
 } from "shared/redux/api"
 import { CircularProgress, Box, Button, Theme } from "@mui/material"
 import { useNavigate, useParams } from "react-router-dom"
@@ -17,10 +18,11 @@ import { format } from "date-fns"
 import Comments from "./ui/comments"
 import Comment from "./ui/comment"
 import { CommentType } from "shared/redux/types"
-import { change } from "shared/redux/local"
+import { change, setUser } from "shared/redux/local"
 import { useTheme } from "@emotion/react"
 import CreateIcon from "@mui/icons-material/Create"
 import DeleteIcon from "@mui/icons-material/Delete"
+import { Link } from "react-router-dom"
 const avatar = require("../../shared/assets/avatar.png")
 
 export const ArticlePage: React.FC = () => {
@@ -37,7 +39,7 @@ export const ArticlePage: React.FC = () => {
   const navigate = useNavigate()
   const theme = useTheme() as Theme
   const handleDelete = async () => {
-    const { data, error } = await del(slug)
+    const { error } = await del(slug)
     if (!error) navigate("/articles")
   }
   const dispatch = useDispatch()
@@ -66,7 +68,7 @@ export const ArticlePage: React.FC = () => {
     <CircularProgress className="mx-auto" />
   ) : (
     <Box
-      className="min-h-[550px] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden relative p-3 flex flex-col justify-between"
+      className="min-h-[550px] xs:w-[90vw] sm:w-[60vw] rounded-md mx-auto animate-display overflow-x-hidden p-3 flex flex-col justify-between"
       sx={{
         bgcolor: "primary.main",
         color: "secondary.main",
@@ -98,23 +100,24 @@ export const ArticlePage: React.FC = () => {
                     {format(data.article.createdAt, "PP")}
                   </Box>
                 </Box>
-                <div className="min-h-[46px] min-w-[46px] max-w-[46px] max-h-[46px]">
+                <Link
+                  to={`/articles/author/${data.article.author.username}`}
+                  className="min-w-[56px] w-[56px] h-[56px] flex items-center justify-center hover:opacity-50 transition-opacity duration-200"
+                  onClick={() => dispatch(setUser(data.article.author.username))}
+                >
                   {!load && <CircularProgress color="info" />}
                   <img
                     src={image || data.article.author.image}
                     onLoad={() => setLoad(true)}
                     alt="avatar"
                     style={{ display: load ? "block" : "none" }}
-                    className="rounded-[50%] animate-display min-w-[46px] max-w-[46px] max-h-[46px] min-h-[46px] border-[2px] border-solid border-[#b3aaaa]"
+                    className="rounded-[50%] animate-display w-[56px] h-[56px] gradient-box"
                   />
-                </div>
+                </Link>
               </Box>
             </Box>
             {(data.article?.tagList?.length && <Tags tagList={data.article.tagList} />) || null}
-            <Box
-              className="overflow-hidden"
-              sx={{ color: "text.primary", display: "flex", gap: "1em", justifyContent: "space-between" }}
-            >
+            <Box className="overflow-hidden" sx={{ color: "text.primary", display: "flex", gap: "1em" }}>
               <p className="text-[12px]">{data.article.description}</p>
             </Box>
             {data.article.author.username === userData?.user.username && (
@@ -141,11 +144,13 @@ export const ArticlePage: React.FC = () => {
               </Box>
             )}
           </Box>
-          <section className="break-words text-clamp">
+          <section className="break-words text-clamp min-h-60">
             <Markdown className="markdown">{data.article.body}</Markdown>
           </section>
         </div>
-        <Box className="text-[20px] font-extralight flex flex-col items-start mt-20">
+      </section>
+      <section className="min-h-40">
+        <Box className="text-[20px] font-extralight flex flex-col items-start">
           <div className="flex gap-2 items-center">
             Comments
             <span className="inline-block min-w-6 h-5 rounded-xl bg-[#1890ff] text-[12px] text-center p-[2px] text-white">
@@ -175,8 +180,8 @@ export const ArticlePage: React.FC = () => {
             </Button>
           )}
         </Box>
+        <Comments data={!!userData} />
       </section>
-      <Comments data={!!userData} />
     </Box>
   )
 }

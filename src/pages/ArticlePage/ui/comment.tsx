@@ -32,7 +32,7 @@ const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element =>
       <img
         src={props.author.image}
         alt="avatar"
-        className="w-[46px] h-[46px] rounded-[50%] self-start border-[2px] border-solid border-[#b3aaaa]"
+        className="min-w-[46px] w-[46px] h-[46px] rounded-[50%] self-start gradient-box"
       />
       <div>
         <div className="flex gap-2">

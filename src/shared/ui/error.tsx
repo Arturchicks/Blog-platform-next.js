@@ -9,7 +9,7 @@ export const ErrorMessage: React.FC<ErrorProps> = ({ message, fontsize, type }: 
   return (
     <p
       className={clsx(
-        type === "comment" ? "bottom-[24px]" : "bottom-[-20px]",
+        type === "comment" ? "bottom-[24px]" : type === "edit" ? null : "bottom-[-20px]",
         `animate-display absolute text-red-500 font-Roboto text-[${fontsize}px]`
       )}
     >

@@ -82,3 +82,11 @@ body {
   border-radius: 3px;
   max-width: 50%;
 }
+.gradient-box {
+  max-width: 56px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background:
+    linear-gradient(white, white 0) padding-box,
+    linear-gradient(to right, #e2e1e6, #0288d1) border-box;
+}

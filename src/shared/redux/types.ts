@@ -1,3 +1,4 @@
+import { error } from "console"
 import { IArticle } from "../../entities/article"
 
 export interface QueryArticles {
@@ -21,12 +22,22 @@ export interface QueryArticle {
 export interface QueryArgs {
   offset: number
   tag: string | undefined
+  username: string | undefined
 }
 export interface MutationAccount {
-  user: {
-    username: string
-    email?: string
-    token: string
+  data: {
+    user?: {
+      username: string
+      email?: string
+      token: string
+    }
+    error?: {
+      errors: {
+        username?: string
+        email?: string
+        password?: string
+      }
+    }
   }
 }
 export interface User {

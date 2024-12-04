@@ -11,9 +11,8 @@ import LogoutIcon from "@mui/icons-material/Logout"
 import AddIcon from "@mui/icons-material/Add"
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt"
 import LoginIcon from "@mui/icons-material/Login"
-import PublicIcon from "@mui/icons-material/Public"
 import { IoPlanetSharp } from "react-icons/io5"
-import { StyledMenu } from "shared/ui/styledMenu"
+import { setUser } from "shared/redux/local"
 
 const avatar = require("../assets/avatar.png")
 export const AppHeader: React.FC = () => {
@@ -45,7 +44,13 @@ export const AppHeader: React.FC = () => {
         }}
       >
         <Box className={clsx("flex flex-wrap items-center justify-center")}>
-          <Link to={"/articles"} onClick={() => dispatch(baseApi.util.invalidateTags(["Article"]))}>
+          <Link
+            to={"/articles"}
+            onClick={() => {
+              dispatch(baseApi.util.invalidateTags(["Article"]))
+              dispatch(setUser(""))
+            }}
+          >
             <span className="flex xs:text-[10px] s:text-[12px] sm:text-[18px] text-clip whitespace-nowrap align-middle text-[#7b7878]">
               RealW{<IoPlanetSharp className="self-center" />}rld Blog
             </span>
@@ -103,7 +108,7 @@ export const AppHeader: React.FC = () => {
                   className={clsx(
                     "xs:w-12 xs:h-12 lg:w-14 lg:h-14",
                     isPointer ? "hover:opacity-50 transition-opacity duration-200 ease-in-out" : null,
-                    "rounded-[50%] border-[2px] border-solid border-gray-400"
+                    "gradient-box"
                   )}
                 />
               </Link>

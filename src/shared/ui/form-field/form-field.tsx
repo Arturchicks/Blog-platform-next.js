@@ -12,7 +12,7 @@ export const FormField: React.FC<IField> = (props): JSX.Element => {
       <Box sx={{ fontSize: "14px", textTransform: "capitalize" }}>{props.type !== "comment" && props.placeholder}</Box>
       <TextField
         size="small"
-        className="w-[100%]"
+        sx={{ width: "100%" }}
         value={props.type !== "comment" ? value : defaultValue}
         {...restProps}
         {...props.register(props.name, {

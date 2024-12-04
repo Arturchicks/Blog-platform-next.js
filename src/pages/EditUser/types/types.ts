@@ -1,7 +1,9 @@
+import { FieldError } from "react-hook-form"
+
 export interface Error {
-  username?: string
-  email?: string
-  password?: string
+  username?: FieldError
+  email?: FieldError
+  password?: FieldError
 }
 export interface IEditUser {
   username: string

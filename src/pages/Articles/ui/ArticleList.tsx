@@ -7,7 +7,8 @@ import { Pagination, useMediaQuery } from "@mui/material"
 import { CircularProgress } from "@mui/material"
 import { useLocation, useParams } from "react-router-dom"
 import Box from "@mui/material/Box"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { store } from "shared/redux"
 
 export const ArticleList: React.FC = () => {
   const [offSet, setOffSet] = useState<number>(0)
@@ -18,20 +19,19 @@ export const ArticleList: React.FC = () => {
   const [location, setLocation] = useState<string>(pathname)
   const isPointer = useMediaQuery("(pointer: fine)")
   const [state, setState] = useState<boolean>(false)
-  const { data, isLoading } = useGetArticlesQuery({ offset: offSet, tag: tag })
+  const { user } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
+  const { data, isLoading } = useGetArticlesQuery({ offset: offSet, tag: tag, username: user })
   const dispatch = useDispatch()
   const handlePage = useCallback((e: React.ChangeEvent<unknown>, value: number) => {
     setOffSet((value - 1) * 20)
     page.current = value
   }, [])
-  console.log("articles")
   useLayoutEffect(() => {
     if (data) {
       setCount(Math.floor(data?.articlesCount / 20))
       window.scrollTo(0, 0)
     }
   }, [data])
-
   useEffect(() => {
     setLocation((prev) => {
       if (prev !== pathname) {
