@@ -12,7 +12,7 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
   const [method, setMethod] = useState<string>(props.liked ? "DELETE" : "POST")
   const isHoverSupported = useMediaQuery("(hover: hover) and (pointer: fine)")
   const handleLike = () => {
-    if (pathname !== "/articles" && !pathname.includes("tag")) {
+    if (pathname !== "/articles" && !pathname.includes("tag") && !pathname.includes("author")) {
       dispatch(baseApi.util.invalidateTags(["Article"]))
     }
     method === "POST" ? setMethod("DELETE") : setMethod("POST")

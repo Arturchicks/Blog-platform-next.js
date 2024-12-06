@@ -12,7 +12,7 @@ import { store } from "shared/redux"
 
 export const ArticleList: React.FC = () => {
   const [offSet, setOffSet] = useState<number>(0)
-  const { tag } = useParams()
+  const { tag, author } = useParams()
   const page = useRef<number>(1)
   const [count, setCount] = useState<number>(0)
   const { pathname } = useLocation()
@@ -33,6 +33,7 @@ export const ArticleList: React.FC = () => {
       window.scrollTo(0, 0)
     }
   }, [data])
+
   useEffect(() => {
     setLocation((prev) => {
       if (prev !== pathname) {

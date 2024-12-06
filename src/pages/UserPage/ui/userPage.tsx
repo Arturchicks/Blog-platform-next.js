@@ -25,12 +25,13 @@ export const UserPage: React.FC = (): JSX.Element => {
   const { username } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { data, error, isLoading } = useGetProfileQuery(username)
+  const { data } = useGetProfileQuery(username)
   const { data: articles } = useGetArticlesQuery({ username: username })
   const [follow] = useFollowUserMutation()
   const [unfollow] = useUnfollowUserMutation()
   const [showImg, setshowImg] = useState<boolean>(false)
   const [image, setImage] = useState<string | undefined>()
+  const token = localStorage.getItem("token")
   const { changed } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
   const theme = useTheme() as Theme
   const handleClick = () => {
@@ -65,7 +66,7 @@ export const UserPage: React.FC = (): JSX.Element => {
   ) : (
     <>
       <Box
-        className="h-[500px] rounded-[1.375rem] w-[60vw] m-auto animate-display"
+        className="xs:h-[355px] sm:h-[500px] rounded-[1.375rem] w-[60vw] m-auto animate-display"
         sx={{
           bgcolor: "primary.main",
           position: "relative",
@@ -85,7 +86,7 @@ export const UserPage: React.FC = (): JSX.Element => {
               }}
               alt="avatar"
               className={clsx(
-                "xs:w-[100px] xs:h-[100px] sm:w-[175px] sm:h-[175px] top-5 absolute left-[50%] transform translate-x-[-50%] translate-y-[-50%] rounded-[50%]",
+                "xs:w-[100px] xs:h-[100px] sm:w-[175px] sm:h-[175px] top-5 absolute left-[50%] transform translate-x-[-50%] translate-y-[-50%] rounded-[50%]  border-solid border-[2px] border-[#0288d1]",
                 image !== avatar && "hover:opacity-70 cursor-pointer transition-opacity duration-200"
               )}
             ></img>
@@ -110,50 +111,52 @@ export const UserPage: React.FC = (): JSX.Element => {
             >
               {data.profile.bio}
             </Box>
-            <Box className="mt-[10px]">
-              <Box className="flex flex-col items-center gap-3" sx={{ fontSize: "12px", color: "text.primary" }}>
-                {(!data.profile.following && <Box>Not Follow {<CloseIcon sx={{ fontSize: "12px" }} />}</Box>) || (
-                  <Box>You are following {<DoneIcon sx={{ fontSize: "12px" }} />}</Box>
-                )}
-                {(!data.profile.following && (
-                  <Button
-                    onClick={() => follow(data.profile.username)}
-                    sx={{ maxWidth: "150px" }}
-                    color="success"
-                    variant="outlined"
-                    endIcon={<PersonAddAlt1Icon />}
-                  >
-                    Follow
-                  </Button>
-                )) || (
-                  <Button
-                    onClick={() => unfollow(data.profile.username)}
-                    sx={{ maxWidth: "150px" }}
-                    color="error"
-                    variant="outlined"
-                    endIcon={<PersonRemoveIcon />}
-                  >
-                    Unfollow
-                  </Button>
-                )}
-                {articles?.articlesCount && (
-                  <Box sx={{ textAlign: "center", fontSize: "12px", color: "text.primary" }}>
-                    {articles?.articlesCount} {articles?.articlesCount > 1 ? "articles" : "article"}
-                  </Box>
-                )}
-                <Button
-                  onClick={() => {
-                    dispatch(setUser(data.profile.username))
-                    navigate(`/articles/author/${username}`)
-                  }}
-                  endIcon={<ArticleIcon />}
-                  sx={{ textTransform: "capitalize" }}
-                  color="info"
-                  variant="outlined"
-                >
-                  Show articles
-                </Button>
-              </Box>
+            <Box className="mt-[10px] flex flex-col gap-4 items-center">
+              {token && (
+                <Box className="flex flex-col items-center gap-3" sx={{ fontSize: "12px", color: "text.primary" }}>
+                  {(!data.profile.following && <Box>Not Follow {<CloseIcon sx={{ fontSize: "12px" }} />}</Box>) || (
+                    <Box>You are following {<DoneIcon sx={{ fontSize: "12px" }} />}</Box>
+                  )}
+                  {(!data.profile.following && (
+                    <Button
+                      onClick={() => follow(data.profile.username)}
+                      sx={{ maxWidth: "150px" }}
+                      color="success"
+                      variant="outlined"
+                      endIcon={<PersonAddAlt1Icon />}
+                    >
+                      Follow
+                    </Button>
+                  )) || (
+                    <Button
+                      onClick={() => unfollow(data.profile.username)}
+                      sx={{ maxWidth: "150px" }}
+                      color="error"
+                      variant="outlined"
+                      endIcon={<PersonRemoveIcon />}
+                    >
+                      Unfollow
+                    </Button>
+                  )}
+                </Box>
+              )}
+              {(articles?.articlesCount && (
+                <Box sx={{ textAlign: "center", fontSize: "12px", color: "text.primary" }}>
+                  {articles?.articlesCount} {articles?.articlesCount > 1 ? "articles" : "article"}
+                </Box>
+              )) || <CircularProgress sx={{ width: "18px", height: "18px", color: "text.primary" }} />}
+              <Button
+                onClick={() => {
+                  dispatch(setUser(data.profile.username))
+                  navigate(`/articles/author/${username}`)
+                }}
+                endIcon={<ArticleIcon />}
+                sx={{ textTransform: "capitalize" }}
+                color="info"
+                variant="outlined"
+              >
+                Show articles
+              </Button>
             </Box>
           </>
         )}

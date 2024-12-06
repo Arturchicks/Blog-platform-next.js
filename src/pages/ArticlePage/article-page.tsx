@@ -220,7 +220,7 @@ export const ArticlePage: React.FC = () => {
               </span>
             </div>
             <div className="w-full flex flex-col gap-3">
-              <TransitionGroup>
+              <TransitionGroup className="flex flex-col gap-3">
                 {comments?.comments
                   .map((e: CommentType) => {
                     const ref = createRef()
