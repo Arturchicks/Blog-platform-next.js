@@ -26,6 +26,7 @@ export const ArticleList: React.FC = () => {
     setOffSet((value - 1) * 20)
     page.current = value
   }, [])
+  console.log("Articles")
   useLayoutEffect(() => {
     if (data) {
       setCount(Math.floor(data?.articlesCount / 20))
@@ -48,7 +49,9 @@ export const ArticleList: React.FC = () => {
     return data?.articles.map((article: IArticle) => <Article {...article} key={nanoid()} />)
   }, [data])
 
-  return (
+  return !data ? (
+    <CircularProgress className="m-auto" />
+  ) : (
     <Box
       className="flex flex-col items-center"
       onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -58,7 +61,6 @@ export const ArticleList: React.FC = () => {
         }
       }}
     >
-      {isLoading && <CircularProgress />}
       {data && !isLoading && (
         <>
           <div className="flex flex-col gap-6">{articles}</div>

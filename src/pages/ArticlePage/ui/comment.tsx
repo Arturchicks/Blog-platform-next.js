@@ -1,31 +1,28 @@
 import { Box, Button, Theme } from "@mui/material"
 import { format } from "date-fns"
-import React, { memo, useState } from "react"
+import { forwardRef } from "react"
 import { useParams } from "react-router-dom"
 import { useDeleteCommentMutation, useGetCommentsQuery } from "shared/redux/api"
 import { CommentType } from "shared/redux/types"
 import Markdown from "react-markdown"
 import DeleteIcon from "@mui/icons-material/Delete"
 import clsx from "clsx"
-import { debounce } from "shared/lib/debounce"
 import { useTheme } from "@emotion/react"
 
-const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element => {
+const Comment = forwardRef<HTMLDivElement, CommentType>(function MyComment(props, ref) {
   const { slug } = useParams()
   const [deleteComment] = useDeleteCommentMutation()
   const { refetch } = useGetCommentsQuery(`${slug}`)
-  const [isDeleted, setIsDeleted] = useState<boolean>(false)
   const theme = useTheme() as Theme
   const handleDeleteComment = async (e: CommentType) => {
     const { error } = await deleteComment({ id: e.id, slug })
     !error && refetch()
   }
-  const debounced = debounce(handleDeleteComment, 300)
   return (
     <div
+      ref={ref}
       className={clsx(
         "flex gap-3 items-center p-3 border-l-[2px]",
-        isDeleted ? "animate-vanish" : "animate-display",
         theme.palette.mode === "dark" && "border-[#787879]"
       )}
     >
@@ -45,10 +42,7 @@ const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element =>
               variant="text"
               color="error"
               startIcon={<DeleteIcon />}
-              onClick={() => {
-                setIsDeleted(true)
-                debounced(props)
-              }}
+              onClick={() => handleDeleteComment(props)}
               sx={{
                 fontSize: "10px",
                 textTransform: "capitalize",
@@ -65,5 +59,5 @@ const Comment: React.FC<CommentType> = memo((props: CommentType): JSX.Element =>
     </div>
   )
 })
-Comment.displayName = "Comment"
+
 export default Comment

@@ -7,7 +7,7 @@ import CreateArticle from "pages/createArticle/createArticle"
 import { ArticlePage } from "pages/ArticlePage/article-page"
 import { EditUser } from "pages/EditUser/edit-user-page"
 import EditArticle from "pages/editArticle/edit-article-page"
-import path from "path"
+import { UserPage } from "pages/UserPage/ui/userPage"
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +55,10 @@ export const router = createBrowserRouter([
       {
         path: "edit-article/:slug",
         element: <EditArticle />,
+      },
+      {
+        path: "profile/:username",
+        element: <UserPage />,
       },
     ],
   },

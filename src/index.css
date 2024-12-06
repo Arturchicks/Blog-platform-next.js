@@ -14,6 +14,7 @@ html {
   margin: 0;
   padding: 0;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 body {
   min-height: 100vh;
@@ -89,4 +90,32 @@ body {
   background:
     linear-gradient(white, white 0) padding-box,
     linear-gradient(to right, #e2e1e6, #0288d1) border-box;
+}
+.alert-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.alert-enter-active {
+  opacity: 0.8;
+  transform: translateX(0);
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+.alert-exit {
+  opacity: 0.8;
+}
+
+.alert-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+.brightness {
+  filter: brightness(0.5);
 }

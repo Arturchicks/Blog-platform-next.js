@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react"
+import React, { memo, useCallback } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { baseApi, useGetCurrentUserQuery } from "shared/redux/api"
 import { Button, useMediaQuery, Box } from "@mui/material"
@@ -51,9 +51,16 @@ export const AppHeader: React.FC = () => {
               dispatch(setUser(""))
             }}
           >
-            <span className="flex xs:text-[10px] s:text-[12px] sm:text-[18px] text-clip whitespace-nowrap align-middle text-[#7b7878]">
-              RealW{<IoPlanetSharp className="self-center" />}rld Blog
-            </span>
+            {!isMobile && (
+              <span className="flex xs:text-[10px] s:text-[12px] sm:text-[18px] text-clip whitespace-nowrap align-middle text-[#0288d1] hover:opacity-70 transition-opacity duration-200">
+                RealW{<IoPlanetSharp className="self-center" />}rld Blog
+              </span>
+            )}
+            {isMobile && (
+              <button className="flex items-center justify-center">
+                <IoPlanetSharp className="text-[46px] text-[#0288d1]" id="planet" />
+              </button>
+            )}
           </Link>
           <MaterialUISwitch onClick={() => setMode(mode === "dark" ? "light" : "dark")} checked={mode === "dark"} />
         </Box>
@@ -81,7 +88,7 @@ export const AppHeader: React.FC = () => {
                 startIcon={<AddIcon />}
                 onClick={() => navigate("/create-article")}
                 color="success"
-                className="whitespace-nowrap"
+                className="whitespace-nowrap animate-display"
                 sx={{
                   textTransform: "capitalize",
                   fontSize: isMobile ? "12px" : "clamp(12px, 1vw, 1rem)",

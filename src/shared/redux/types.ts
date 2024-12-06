@@ -20,9 +20,9 @@ export interface QueryArticle {
   }
 }
 export interface QueryArgs {
-  offset: number
-  tag: string | undefined
-  username: string | undefined
+  offset?: number
+  tag?: string | undefined
+  username?: string | undefined
 }
 export interface MutationAccount {
   data: {

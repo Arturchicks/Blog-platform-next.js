@@ -6,7 +6,7 @@ import { ErrorData, ErrorKey, ISignUp, ServerError } from "./types/types"
 import { ColorButton } from "shared/ui/signButton"
 import { Policy } from "./ui/policy"
 import { useCreateAccountMutation, useLoginUserMutation, useGetCurrentUserQuery } from "shared/redux/api"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Box from "@mui/material/Box"
 import { FormField } from "shared/ui/form-field/form-field"
 import { MutationAccount } from "shared/redux/types"
@@ -57,7 +57,7 @@ export const SignUpForm: React.FC = () => {
 
   return (
     <Box
-      className="animate-display flex flex-col xs:w-[90vw] sx:w-[385px]  rounded-[5px] p-8 pb-16 gap-6 self-center"
+      className="animate-display flex flex-col xs:w-[90vw] sx:w-[385px]  rounded-[5px] p-8  gap-6 self-center"
       sx={{ bgcolor: "primary.main", color: "secondary.main" }}
     >
       <span className="text-center text-[20px]">Create new account</span>
@@ -102,6 +102,12 @@ export const SignUpForm: React.FC = () => {
           Create
         </ColorButton>
       </form>
+      <Box className="text-[12px] flex gap-2 justify-center text-[#8C8C8C]">
+        Already have an account?
+        <Link to={"/sign-in"} className="text-[#1890FF] underline hover:opacity-50">
+          Sign In
+        </Link>
+      </Box>
     </Box>
   )
 }

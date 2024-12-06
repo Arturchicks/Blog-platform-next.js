@@ -8,6 +8,7 @@ import { ColorButton } from "shared/ui/signButton"
 import { useGetCurrentUserQuery, useLoginUserMutation } from "shared/redux/api"
 import { useNavigate } from "react-router-dom"
 import { FormField } from "shared/ui/form-field/form-field"
+import { Link } from "react-router-dom"
 
 export const SignInForm: React.FC = (): JSX.Element => {
   const [login] = useLoginUserMutation({ fixedCacheKey: "login" })
@@ -71,6 +72,12 @@ export const SignInForm: React.FC = (): JSX.Element => {
           Login
         </ColorButton>
       </form>
+      <Box className="text-[12px] flex gap-2 justify-center text-[#8C8C8C]">
+        Do not have an account?
+        <Link to={"/sign-up"} className="text-[#1890FF] underline hover:opacity-50">
+          Sign Up
+        </Link>
+      </Box>
     </Box>
   )
 }

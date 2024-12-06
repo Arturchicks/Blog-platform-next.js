@@ -26,14 +26,14 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
   const theme = useTheme() as Theme
   useEffect(() => {
     let timer: NodeJS.Timeout | undefined
-    if (changed.includes(props.slug)) {
+    if (changed.includes(props.author.username)) {
       setLoad(true)
       setImage(avatar)
     } else {
       if (!load) {
         timer = setTimeout(() => {
           setImage(avatar)
-          dispatch(change(props.slug))
+          dispatch(change(props.author.username))
         }, 2000)
       }
     }
