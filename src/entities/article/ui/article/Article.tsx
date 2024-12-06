@@ -114,7 +114,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
         </Box>
         <Tags tagList={props.tagList} />
       </Box>
-      <Box className="overflow-hidden">
+      <Box className="overflow-hidden" sx={{ color: "text.primary", fontWeight: 200 }}>
         <p className="h-[25px] overflow-hidden text-ellipsis text-[16px]">{props.description}</p>
       </Box>
     </Box>
