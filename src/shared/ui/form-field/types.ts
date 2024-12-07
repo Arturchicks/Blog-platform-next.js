@@ -12,4 +12,5 @@ export interface IField {
   errors: FieldError | undefined
   multiline?: boolean
   register: UseFormRegister<any>
+  children?: React.ReactNode
 }

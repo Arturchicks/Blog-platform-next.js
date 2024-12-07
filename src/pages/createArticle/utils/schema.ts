@@ -6,5 +6,6 @@ export const schema = yup
     description: yup.string().max(150, "No more").required("Enter description"),
     body: yup.string().required("Enter text"),
     tagList: yup.array().of(yup.object({ tag: yup.string().required() })),
+    image: yup.string(),
   })
   .required()

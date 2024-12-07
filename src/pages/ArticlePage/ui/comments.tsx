@@ -48,8 +48,8 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
     if (!Object.values(data).filter((e) => e).length) setError("body", { message: "can't be blank" })
     else {
       await comment({ slug, data: { comment: { body: `${data.body?.trim()} ${data.imageHash || ""}` } } })
-      reset()
       handleDeleteImg()
+      reset()
     }
   })
 

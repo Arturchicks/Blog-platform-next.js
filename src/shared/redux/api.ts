@@ -69,7 +69,7 @@ export const baseApi = createApi({
         method: "PUT",
         body: user,
       }),
-      invalidatesTags: ["User", "Article", "Comments"],
+      invalidatesTags: ["User", "Article", "Comments", "Profile", "ArticlePage"],
     }),
     createArticle: builder.mutation<MutationArticle, Article>({
       query: (article) => ({

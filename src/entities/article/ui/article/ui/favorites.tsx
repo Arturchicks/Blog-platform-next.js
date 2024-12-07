@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { memo, useState } from "react"
 import { Box, Checkbox, useMediaQuery } from "@mui/material"
 import { FavoriteBorder, Favorite } from "@mui/icons-material"
 import { useLocation } from "react-router-dom"
@@ -16,7 +16,7 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
       dispatch(baseApi.util.invalidateTags(["Article"]))
     }
     method === "POST" ? setMethod("DELETE") : setMethod("POST")
-    props.onToggleLike({ slug: props.slug, method })
+    props.onToggleLike({ slug: props.slug, method: props.method || method })
   }
 
   return (
@@ -66,4 +66,5 @@ const Favorites: React.FC<ICount> = (props: ICount) => {
     </Box>
   )
 }
+// Favorites.displayName = "Favorites"
 export default Favorites

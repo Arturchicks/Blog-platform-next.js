@@ -75,7 +75,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
       }}
     >
       <Box>
-        <Box className="flex w-[100%] justify-between items-center max-h-[42px]">
+        <Box className="flex w-[100%] justify-between items-center">
           <Box className="flex max-w-[60%] items-center">
             <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap capitalize">
               {props.title.trim() || "Untitled"}
@@ -96,7 +96,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
               <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
                 {props.author.username}
               </Box>
-              <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)" }}>
+              <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)", whiteSpace: "nowrap" }}>
                 {format(props.createdAt, "PP")}
               </Box>
             </Box>
@@ -107,7 +107,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
                 onLoad={() => setLoad(true)}
                 alt="avatar"
                 style={{ display: load ? "block" : "none" }}
-                className="w-[56px] h-[56px] rounded-[50%] animate-display gradient-box"
+                className="w-[56px] h-[56px] rounded-[50%] animate-display border-[2px] border-solid border-[#1890FF]"
               />
             </div>
           </Box>

@@ -13,7 +13,7 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt"
 import LoginIcon from "@mui/icons-material/Login"
 import { IoPlanetSharp } from "react-icons/io5"
 import { setUser } from "shared/redux/local"
-
+import NoteAddIcon from "@mui/icons-material/NoteAdd"
 const avatar = require("../assets/avatar.png")
 export const AppHeader: React.FC = () => {
   const dispatch = useDispatch()
@@ -21,6 +21,7 @@ export const AppHeader: React.FC = () => {
   const { pathname } = useLocation()
   const theme = useTheme() as Theme
   const isMobile = useMediaQuery("(max-width: 480px)")
+  const isMobileX = useMediaQuery("(max-width: 360px)")
   const { mode, setMode } = useColorScheme()
   const isPointer = useMediaQuery("(pointer: fine)")
   const token = localStorage.getItem("token")
@@ -52,7 +53,7 @@ export const AppHeader: React.FC = () => {
             }}
           >
             {!isMobile && (
-              <span className="flex xs:text-[10px] s:text-[12px] sm:text-[18px] text-clip whitespace-nowrap align-middle text-[#0288d1] hover:opacity-70 transition-opacity duration-200">
+              <span className="flex text-[18px] text-clip whitespace-nowrap align-middle text-[#0288d1] hover:opacity-70 transition-opacity duration-200">
                 RealW{<IoPlanetSharp className="self-center" />}rld Blog
               </span>
             )}
@@ -66,7 +67,12 @@ export const AppHeader: React.FC = () => {
         </Box>
         {!data && !token && (
           <Box className="flex gap-4 animate-display">
-            <Button color="info" onClick={() => navigate("/sign-in")} endIcon={<LoginIcon />}>
+            <Button
+              color="info"
+              onClick={() => navigate("/sign-in")}
+              endIcon={<LoginIcon />}
+              sx={{ fontSize: isMobileX ? "12px" : "16px", whiteSpace: "nowrap" }}
+            >
               Sign In
             </Button>
             <Button
@@ -74,7 +80,7 @@ export const AppHeader: React.FC = () => {
               onClick={() => navigate("/sign-up")}
               endIcon={<PersonAddAltIcon />}
               variant="outlined"
-              sx={{ textTransform: "capitalize" }}
+              sx={{ textTransform: "capitalize", fontSize: isMobileX ? "12px" : "16px", whiteSpace: "nowrap" }}
             >
               Sign Up
             </Button>
@@ -82,7 +88,7 @@ export const AppHeader: React.FC = () => {
         )}
         {data && (
           <Box className="flex items-center animate-display gap-[2vw]">
-            {pathname !== "/create-article" && (
+            {pathname !== "/create-article" && !isMobileX && (
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
@@ -98,24 +104,30 @@ export const AppHeader: React.FC = () => {
                 Create article
               </Button>
             )}
+            {pathname !== "/create-article" && isMobileX && (
+              <Button
+                variant="text"
+                startIcon={<NoteAddIcon />}
+                onClick={() => navigate("/create-article")}
+                color="success"
+                className="whitespace-nowrap animate-display"
+                sx={{
+                  minWidth: 0,
+                  "& .MuiButton-startIcon": {
+                    margin: 0,
+                  },
+                }}
+              />
+            )}
             <div className="flex items-center gap-2">
               {!isMobile && <span className="capitalize">{data.user.username}</span>}
-              <Link
-                to={"/edit-profile"}
-                onClick={(e) => {
-                  if (pathname === "/edit-profile") {
-                    e.preventDefault()
-                    return
-                  }
-                }}
-              >
+              <Link to={`/profile/${data.user.username}`}>
                 <img
                   src={data.user.image || avatar}
                   alt="avatar"
                   className={clsx(
-                    "xs:w-12 xs:h-12 lg:w-14 lg:h-14",
-                    isPointer ? "hover:opacity-50 transition-opacity duration-200 ease-in-out" : null,
-                    "gradient-box"
+                    "xs:w-12 xs:h-12 lg:w-14 lg:h-14 border-[2px] border-solid border-[#1890FF] rounded-[50%]",
+                    isPointer ? "hover:opacity-50 transition-opacity duration-200 ease-in-out" : null
                   )}
                 />
               </Link>
@@ -130,6 +142,9 @@ export const AppHeader: React.FC = () => {
                 textTransform: "capitalize",
                 fontSize: isMobile ? "12px" : "clamp(12px, 1vw, 1rem)",
                 padding: isMobile ? "3.7px" : "auto",
+                "& .MuiButton-startIcon": {
+                  marginLeft: 0,
+                },
               }}
             >
               Log Out

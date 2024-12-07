@@ -43,6 +43,7 @@ export interface ICount {
   count: number
   liked: boolean
   slug: string
+  method?: string
   onToggleLike: UseMutationTrigger<MutationLike>
   className: string
 }

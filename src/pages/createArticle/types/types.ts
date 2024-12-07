@@ -15,4 +15,5 @@ export interface Fields {
   description: string
   body: string
   tagList?: { tag: string }[]
+  image?: string
 }
