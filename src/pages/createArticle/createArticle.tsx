@@ -45,7 +45,9 @@ const CreateArticle: React.FC = (): JSX.Element => {
   const onSubmit = handleSubmit(async (data) => {
     const tags = data.tagList?.map(({ tag }) => tag)
     const { body, ...restData } = data
-    const { error } = await create({ article: { body: `${body} ![img](${image})`, ...restData, tagList: tags } })
+    const { error } = await create({
+      article: { body: image ? `${body} ![img](${image})` : body, ...restData, tagList: tags },
+    })
     if (!error) navigate("/articles")
   })
   const handleDelete = (index: number) => {

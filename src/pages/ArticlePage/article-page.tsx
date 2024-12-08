@@ -1,5 +1,5 @@
 import Markdown from "react-markdown"
-import React, { createRef, Ref, useEffect, useState } from "react"
+import React, { createRef, Ref, useEffect, useRef, useState } from "react"
 import Favorites from "entities/article/ui/article/ui/favorites"
 import { Tags } from "entities/article/ui/article/ui/tagList"
 import {
@@ -22,6 +22,7 @@ import { useTheme } from "@emotion/react"
 import CreateIcon from "@mui/icons-material/Create"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
+import { PopConfirm } from "./ui/popConfirm"
 
 const avatar = require("../../shared/assets/avatar.png")
 
@@ -30,8 +31,10 @@ export const ArticlePage: React.FC = () => {
   const { data } = useGetArticleQuery(`${slug}`)
   const { data: comments } = useGetCommentsQuery(`${slug}`)
   const { data: userData } = useGetCurrentUserQuery(null)
-  const [test, setTest] = useState<string>("")
+  const [animation, setAnimation] = useState<string>("")
+  const popRef = useRef() as Ref<any>
   const [load, setLoad] = useState<boolean>(false)
+  const [popOpen, setPopOpen] = useState<boolean>(false)
   const [image, setImage] = useState<string | undefined>()
   const [commentsQuantity, setCommentsQuantuity] = useState<number>(5)
   const { changed } = useSelector((state: ReturnType<typeof store.getState>) => state.local)
@@ -74,16 +77,17 @@ export const ArticlePage: React.FC = () => {
       clearTimeout(timer)
       timer = setTimeout(() => {
         tapCount = 0
-        setTest("")
+        setAnimation("animate-none")
       }, 400)
       if (tapCount === 2) {
         if (slug) setLike({ slug, method: "POST" })
-        setTest("animate-ping")
+        setAnimation("animate-ping")
         setMethod((prev) => (prev === "POST" ? "DELETE" : "POST"))
       }
     }
   }
   const handleClickTest = handleClick()
+  const handlePopClose = () => setPopOpen(false)
   useEffect(() => {
     if (data?.article.favorited) {
       setMethod("DELETE")
@@ -91,6 +95,10 @@ export const ArticlePage: React.FC = () => {
       setMethod("POST")
     }
   }, [data])
+  useEffect(() => {
+    window.addEventListener("click", handlePopClose)
+    return () => window.removeEventListener("click", handlePopClose)
+  }, [])
   return !data ? (
     <CircularProgress className="m-auto" />
   ) : (
@@ -117,7 +125,7 @@ export const ArticlePage: React.FC = () => {
                   liked={data.article.favorited}
                   slug={data.article.slug}
                   onToggleLike={setLike}
-                  className={test}
+                  className={animation}
                 />
               </Box>
               <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%] relative">
@@ -159,7 +167,10 @@ export const ArticlePage: React.FC = () => {
                   startIcon={<DeleteIcon />}
                   aria-describedby="delete"
                   sx={{ textTransform: "capitalize" }}
-                  onClick={handleDelete}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setPopOpen(true)
+                  }}
                 >
                   Delete
                 </Button>
@@ -172,6 +183,9 @@ export const ArticlePage: React.FC = () => {
                 >
                   Edit
                 </Button>
+                <CSSTransition nodeRef={popRef} in={popOpen} timeout={300} classNames="alert" unmountOnExit>
+                  <PopConfirm delete={handleDelete} ref={popRef} />
+                </CSSTransition>
               </Box>
             )}
           </Box>

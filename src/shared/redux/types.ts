@@ -1,4 +1,3 @@
-import { error } from "console"
 import { IArticle } from "../../entities/article"
 
 export interface QueryArticles {
@@ -60,8 +59,11 @@ export interface Author {
   username: string
   image: string | undefined
   following: boolean
+  bio?: string
 }
-
+export interface Profile {
+  profile: Author
+}
 export interface Article {
   article: { title: string; description: string; body: string; tagList?: string[] }
 }

@@ -9,6 +9,7 @@ import {
   QueryUser,
   QueryArticle,
   CommentsType,
+  Profile,
 } from "./types"
 import { QueryArgs } from "./types"
 import { Params } from "./types"
@@ -79,7 +80,7 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["Article"],
     }),
-    deleteArticle: builder.mutation({
+    deleteArticle: builder.mutation<null, string | undefined>({
       query: (slug) => ({
         url: `/articles/${slug}`,
         method: "DELETE",
@@ -117,14 +118,14 @@ export const baseApi = createApi({
       query: (username) => `profiles/${username}`,
       providesTags: ["Profile"],
     }),
-    followUser: builder.mutation({
+    followUser: builder.mutation<Profile, string>({
       query: (username) => ({
         url: `profiles/${username}/follow`,
         method: "POST",
       }),
       invalidatesTags: ["Profile"],
     }),
-    unfollowUser: builder.mutation({
+    unfollowUser: builder.mutation<Profile, string>({
       query: (username) => ({
         url: `profiles/${username}/follow`,
         method: "DELETE",

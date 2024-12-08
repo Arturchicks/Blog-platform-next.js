@@ -100,14 +100,14 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
                 {format(props.createdAt, "PP")}
               </Box>
             </Box>
-            <div className="xs:w-[46px] xs:h-[46px] sm:w-[56px] sm:h-[56px] flex items-center justify-center">
+            <div className="xs:min-w-[46px] xs:max-w-[46px] xs:min-h-[46px] xs:max-h-[46px] sm:max-w-[56px] sm:min-h-[56px] sm:min-w-[56px] sm:max-h-[56px] flex items-center justify-center">
               {!load && <CircularProgress aria-busy="true" color="info" />}
               <img
                 src={image}
                 onLoad={() => setLoad(true)}
                 alt="avatar"
                 style={{ display: load ? "block" : "none" }}
-                className="xs:w-[46px] xs:h-[46px] sm:w-[56px] sm:h-[56px] rounded-[50%] animate-display border-[2px] border-solid border-[#1890FF]"
+                className="xs:min-w-[46px] xs:max-w-[46px] xs:min-h-[46px] xs:max-h-[46px] sm:max-w-[56px] sm:min-h-[56px] sm:min-w-[56px] sm:max-h-[56px]  rounded-[50%] animate-display border-[2px] border-solid border-[#1890FF]"
               />
             </div>
           </Box>

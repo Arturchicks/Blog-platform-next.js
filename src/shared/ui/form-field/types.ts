@@ -1,4 +1,7 @@
+import { MutableRefObject, Ref, RefObject } from "react"
 import { FieldError, UseFormRegister } from "react-hook-form"
+
+type NewType = string
 
 export interface IField {
   rows?: number
@@ -7,8 +10,9 @@ export interface IField {
   defaultValue?: string
   type?: string
   error: boolean
-  name: string
-  isSubmitted?: boolean
+  ref?: RefObject<any>
+  name: NewType
+  isEmpty?: boolean
   errors: FieldError | undefined
   multiline?: boolean
   register: UseFormRegister<any>
