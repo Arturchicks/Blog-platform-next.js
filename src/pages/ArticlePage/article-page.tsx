@@ -30,6 +30,7 @@ export const ArticlePage: React.FC = () => {
   const { data } = useGetArticleQuery(`${slug}`)
   const { data: comments } = useGetCommentsQuery(`${slug}`)
   const { data: userData } = useGetCurrentUserQuery(null)
+  const [test, setTest] = useState<string>("")
   const [load, setLoad] = useState<boolean>(false)
   const [image, setImage] = useState<string | undefined>()
   const [commentsQuantity, setCommentsQuantuity] = useState<number>(5)
@@ -68,15 +69,16 @@ export const ArticlePage: React.FC = () => {
   const handleClick = () => {
     let tapCount = 0
     let timer: NodeJS.Timeout | undefined
-    console.log("tap")
     return () => {
       tapCount++
       clearTimeout(timer)
       timer = setTimeout(() => {
         tapCount = 0
-      }, 300)
+        setTest("")
+      }, 400)
       if (tapCount === 2) {
         if (slug) setLike({ slug, method: "POST" })
+        setTest("animate-ping")
         setMethod((prev) => (prev === "POST" ? "DELETE" : "POST"))
       }
     }
@@ -115,7 +117,7 @@ export const ArticlePage: React.FC = () => {
                   liked={data.article.favorited}
                   slug={data.article.slug}
                   onToggleLike={setLike}
-                  className="inline-block min-w-3 text-clamp"
+                  className={test}
                 />
               </Box>
               <Box className="flex w-auto xs:gap-1 gap-2 justify-end max-w-[50%] min-w-[40%] relative">

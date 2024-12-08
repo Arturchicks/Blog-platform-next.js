@@ -33,10 +33,10 @@ export const AppHeader: React.FC = () => {
   }, [])
   console.log("header")
   return (
-    <Box className="h-[80px]">
+    <Box className="h-[75px]">
       <Box
         id="header"
-        className="flex p-2 h-[80px] items-center justify-between fixed w-[100%]"
+        className="flex p-2 h-[75px] items-center justify-between fixed w-[100%]"
         sx={{
           bgcolor: "primary.main",
           color: "secondary.main",

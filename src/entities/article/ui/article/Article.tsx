@@ -77,7 +77,7 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
       <Box>
         <Box className="flex w-[100%] justify-between items-center">
           <Box className="flex max-w-[60%] items-center">
-            <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp-xl whitespace-nowrap capitalize">
+            <h3 className=" text-[#1890FF] max-h-9 text-ellipsis overflow-hidden text-clamp whitespace-nowrap capitalize">
               {props.title.trim() || "Untitled"}
             </h3>
             <Favorites
@@ -93,21 +93,21 @@ const Article: React.FC<IArticle> = (props: IArticle) => {
               sx={{ fontSize: "clamp(14px, 2vw, 16px)" }}
               className="flex flex-col text-right w-[80%] justify-center overflow-hidden"
             >
-              <Box sx={{ fontSize: "clamp(14px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
+              <Box sx={{ fontSize: "clamp(12px, 2vw, 16px)" }} className="overflow-hidden text-ellipsis">
                 {props.author.username}
               </Box>
-              <Box sx={{ color: "text.primary", fontSize: "clamp(12px, 1vw, 12px)", whiteSpace: "nowrap" }}>
+              <Box sx={{ color: "text.primary", fontSize: "clamp(8px, 1vw, 12px)", whiteSpace: "nowrap" }}>
                 {format(props.createdAt, "PP")}
               </Box>
             </Box>
-            <div className="min-w-[56px] min-h-[56px] flex items-center justify-center">
+            <div className="xs:w-[46px] xs:h-[46px] sm:w-[56px] sm:h-[56px] flex items-center justify-center">
               {!load && <CircularProgress aria-busy="true" color="info" />}
               <img
                 src={image}
                 onLoad={() => setLoad(true)}
                 alt="avatar"
                 style={{ display: load ? "block" : "none" }}
-                className="w-[56px] h-[56px] rounded-[50%] animate-display border-[2px] border-solid border-[#1890FF]"
+                className="xs:w-[46px] xs:h-[46px] sm:w-[56px] sm:h-[56px] rounded-[50%] animate-display border-[2px] border-solid border-[#1890FF]"
               />
             </div>
           </Box>

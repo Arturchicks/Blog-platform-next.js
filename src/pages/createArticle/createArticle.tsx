@@ -15,11 +15,11 @@ import { Tag } from "./ui/tag"
 import LocalOfferIcon from "@mui/icons-material/LocalOffer"
 import { VisuallyHiddenInput } from "pages/EditUser/ui/visibilityHiddenInput"
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate"
-import * as imageConversion from "image-conversion"
 import ClearIcon from "@mui/icons-material/Clear"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { nanoid } from "nanoid"
 import { handleImg } from "shared/lib/handleImage"
+
 const CreateArticle: React.FC = (): JSX.Element => {
   const navigate = useNavigate()
   const [firstRender, setFirstRender] = useState<boolean>(true)

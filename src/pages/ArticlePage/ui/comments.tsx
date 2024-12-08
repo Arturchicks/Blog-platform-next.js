@@ -77,6 +77,7 @@ const Comments: React.FC<{ data: boolean }> = ({ data: userData }): JSX.Element 
                 color="info"
                 variant="text"
                 tabIndex={-1}
+                onClick={(e) => e.stopPropagation()}
                 startIcon={<AddPhotoAlternateIcon />}
                 sx={{
                   "& .MuiButton-startIcon": {

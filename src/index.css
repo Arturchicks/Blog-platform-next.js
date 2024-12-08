@@ -61,6 +61,13 @@ body {
     left: 0;
   }
 }
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
 .animate-display {
   animation: display 0.5s ease-in-out;
 }
@@ -118,4 +125,8 @@ body {
 
 .brightness {
   filter: brightness(0.5);
+}
+
+.animate-ping {
+  animation: ping 0.7s cubic-bezier(0, 0, 0.2, 1);
 }

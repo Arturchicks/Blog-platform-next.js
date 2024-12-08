@@ -11,9 +11,9 @@ export default {
       Roboto: ["Roboto", "sans-serif"],
     },
     fontSize: {
-      "clamp-xs": "clamp(0.5rem, 1vw, 0.7rem)",
-      clamp: "clamp(0.7rem, 2vw, 1rem)",
-      "clamp-xl": "clamp(16px, 2vw, 1.5rem)",
+      "clamp-xs": "clamp(8px, 1vw, 0.7rem)",
+      clamp: "clamp(12px, 2vw, 1rem)",
+      "clamp-xl": "clamp(16px, 2vw, 20px)",
     },
     extend: {},
     screens: {
