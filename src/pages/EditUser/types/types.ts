@@ -1,3 +1,4 @@
+import { Dispatch, LegacyRef, SetStateAction } from "react"
 import { FieldError } from "react-hook-form"
 
 export interface Error {
@@ -15,4 +16,9 @@ export interface IEditUser {
       errors: Error
     }
   }
+}
+export interface SwitchTypes {
+  password: boolean
+  visible: boolean
+  setVisible: Dispatch<SetStateAction<boolean>>
 }

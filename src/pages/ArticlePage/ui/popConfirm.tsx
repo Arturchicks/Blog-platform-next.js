@@ -6,19 +6,27 @@ export const PopConfirm = forwardRef((props: { delete: () => void }, ref): JSX.E
   const theme = useTheme() as Theme
   return (
     <Box
-      className="rounded z-[1] flex flex-col gap-3 absolute bottom-[-95px] right-[90px] text-[12px] p-2"
+      className="rounded flex flex-col absolute bottom-[-95px] right-[90px] text-[12px] p-2"
       ref={ref}
-      sx={{ bgcolor: theme.palette.mode === "dark" ? "#7f8185" : "#ebeef3" }}
+      sx={{
+        bgcolor: theme.palette.mode === "dark" ? "#7f8185" : "#ebeef3",
+        border: "1px solid",
+        borderColor: "text.primary",
+        zIndex: 1,
+      }}
     >
       <Box
         sx={{
           width: "20px",
           height: "20px",
           transform: "rotate(45deg)",
-          borderRadius: "4px",
+          borderTopLeftRadius: "4px",
+          border: "1px solid transparent",
+          borderTopColor: "text.primary",
+          borderLeftColor: "text.primary",
           position: "absolute",
           right: "40px",
-          top: "-8px",
+          top: "-10.5px",
           zIndex: 0,
           bgcolor: theme.palette.mode === "dark" ? "#7f8185" : "#ebeef3",
         }}

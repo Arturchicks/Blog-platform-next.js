@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from "react"
-import { Box, Input, Theme } from "@mui/material"
+import { Box, Theme } from "@mui/material"
 import { ColorButton } from "shared/ui/signButton"
 import { schema } from "./utils/schema"
 import { useForm } from "react-hook-form"
@@ -14,8 +14,10 @@ import { useTheme } from "@emotion/react"
 import { FormField } from "shared/ui/form-field/form-field"
 import { ErrorKey } from "features/sign-up-form/types/types"
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto"
-import { FaRegEyeSlash } from "react-icons/fa"
-import { FaRegEye } from "react-icons/fa"
+import { SwitchComponent } from "./ui/switchComponent"
+import { ErrorMessage } from "shared/ui/error"
+
+const avatar = require("../../shared/assets/avatar.png")
 
 export const EditUser: React.FC = (): JSX.Element => {
   const [image, setImage] = useState<string | null | ArrayBuffer>(null)
@@ -32,7 +34,6 @@ export const EditUser: React.FC = (): JSX.Element => {
     register,
     handleSubmit,
     setError,
-    setValue,
     watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
@@ -41,7 +42,7 @@ export const EditUser: React.FC = (): JSX.Element => {
   const [edit, { isError }] = useEditProfileMutation()
   const { data: userData } = useGetCurrentUserQuery(null, { skip: isError })
   const navigate = useNavigate()
-  const watchPassord = watch("password")
+  const watchPassord = Boolean(watch("password"))
   const onSubmit = handleSubmit(async (data) => {
     const dataList = Object.values(data).filter((e) => e).length
     if (dataList <= 1 && !image) {
@@ -74,7 +75,7 @@ export const EditUser: React.FC = (): JSX.Element => {
   return (
     <Box
       className={clsx(
-        " xs:w-[75vw] s:w-[330px] rounded pt-7 pb-7 pl-14 pr-14 flex flex-col self-center animate-display relative",
+        " xs:w-[75vw] s:w-[330px] rounded pt-7 pb-14 pl-14 pr-14 flex flex-col mx-auto animate-display relative",
         errors.manual ? "outline outline-1 outline-red-600" : "outline-none"
       )}
       sx={{
@@ -83,21 +84,16 @@ export const EditUser: React.FC = (): JSX.Element => {
         boxShadow: `0px 0px 4px ${theme.palette.mode === "dark" ? "#494949" : "#d6caca"}`,
       }}
     >
-      <Box className="text-center relative h-[45px] flex justify-center">
-        {errors.manual && (
-          <p className="animate-display absolute bottom-2 text-red-500 font-Roboto text-[12px] text-center inline-block">
-            {errors?.manual?.message}
-          </p>
-        )}
-        Edit Profile
+      <Box className="text-center relative h-7 flex justify-center">
+        {errors.manual && <ErrorMessage message={"Change at least one parameter"} px="2" fontsize={12} />}
       </Box>
-      <div className="flex items-center gap-10 self-center">
+      <div className="flex items-center gap-10 self-center relative">
         <label htmlFor="img" className="relative cursor-pointer hover:opacity-50 transition-opacity duration-200">
           <div>
             <img
-              src={(image as string) || userData?.user.image}
+              src={(image as string) || userData?.user.image || avatar}
               alt="avatar"
-              className="rounded-[50%] w-[100px] h-[100px] border-[2px] border-solid border-[#1890FF]"
+              className="opacity-60 rounded-[50%] w-[100px] h-[100px] border-[2px] border-solid border-[#1890FF]"
             />
             <VisuallyHiddenInput
               type="file"
@@ -117,9 +113,6 @@ export const EditUser: React.FC = (): JSX.Element => {
             />
           </div>
         </label>
-        {errors.image && (
-          <p className="animate-display text-red-500 font-Roboto text-[12px]">{errors.image?.message}</p>
-        )}
       </div>
       <form className="flex flex-col justify-center gap-10" onSubmit={onSubmit}>
         <fieldset className="flex flex-col gap-4">
@@ -154,18 +147,7 @@ export const EditUser: React.FC = (): JSX.Element => {
             errors={errors.password}
             register={register}
           />
-          {(watchPassord && type && (
-            <FaRegEyeSlash
-              className="text-[24px] hover:opacity-50 cursor-pointer absolute bottom-28 right-[16px] animate-display"
-              onClick={() => setType((prev) => !prev)}
-            />
-          )) ||
-            (watchPassord && (
-              <FaRegEye
-                className="text-[24px] hover:opacity-50 cursor-pointer absolute bottom-28 right-[16px] animate-display"
-                onClick={() => setType((prev) => !prev)}
-              />
-            ))}
+          <SwitchComponent password={watchPassord} setVisible={setType} visible={type} />
         </fieldset>
         <ColorButton type="submit">Save</ColorButton>
       </form>

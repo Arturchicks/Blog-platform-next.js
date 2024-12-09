@@ -13,8 +13,6 @@ import {
 } from "./types"
 import { QueryArgs } from "./types"
 import { Params } from "./types"
-import { useNavigate } from "react-router-dom"
-import { useInternalMessage } from "antd/es/message/useMessage"
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
@@ -114,7 +112,7 @@ export const baseApi = createApi({
       }),
       invalidatesTags: ["ArticlePage", "Comments"],
     }),
-    getProfile: builder.query({
+    getProfile: builder.query<Profile, string | undefined>({
       query: (username) => `profiles/${username}`,
       providesTags: ["Profile"],
     }),

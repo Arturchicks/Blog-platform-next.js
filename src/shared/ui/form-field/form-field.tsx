@@ -22,7 +22,7 @@ export const FormField: React.FC<IField> = (props: IField): JSX.Element => {
             onChange: (e) => setValue(e.target.value),
           })}
         />
-        {props.errors && <ErrorMessage type={type} message={props.errors.message} fontsize={12} />}
+        {props.errors && <ErrorMessage message={props.errors.message} fontsize={12} />}
         {type === "comment" && isEmpty && children}
       </label>
       {type !== "comment" && children}

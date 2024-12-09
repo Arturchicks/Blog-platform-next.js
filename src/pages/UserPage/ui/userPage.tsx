@@ -2,6 +2,7 @@ import { Box, Button, CircularProgress, Theme } from "@mui/material"
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
+import { formatDistanceToNow } from "date-fns"
 import {
   useEditProfileMutation,
   useFollowUserMutation,
@@ -24,6 +25,9 @@ import EditIcon from "@mui/icons-material/Edit"
 import { FaUserEdit } from "react-icons/fa"
 import { SwitchComponent } from "./switchComponent/switchComponent"
 import { CSSTransition } from "react-transition-group"
+import { IArticle } from "entities/article"
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium"
+
 const avatar = require("../../../shared/assets/avatar.png")
 
 export const UserPage: React.FC = (): JSX.Element => {
@@ -33,11 +37,13 @@ export const UserPage: React.FC = (): JSX.Element => {
   const { data, refetch } = useGetProfileQuery(username)
   const { data: articles } = useGetArticlesQuery({ username: username })
   const { data: user } = useGetCurrentUserQuery(null)
+  const [closeBio, setCloseBio] = useState<boolean>(true)
   const [edit] = useEditProfileMutation()
   const [follow] = useFollowUserMutation()
   const [unfollow] = useUnfollowUserMutation()
   const [showImg, setshowImg] = useState<boolean>(false)
   const [openBio, setOpenBio] = useState<boolean>(false)
+  const [top, setTop] = useState<IArticle | null>(null)
   const bioRef = useRef<any>()
   const [image, setImage] = useState<string | undefined>()
   const token = localStorage.getItem("token")
@@ -48,12 +54,10 @@ export const UserPage: React.FC = (): JSX.Element => {
     register,
     reset,
     clearErrors,
-    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) })
   const handleClick = () => setshowImg(false)
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data)
     const { bio } = data
     if (user) {
       const { username, email } = user.user
@@ -62,23 +66,19 @@ export const UserPage: React.FC = (): JSX.Element => {
         clearErrors()
         reset()
         refetch()
-        setOpenBio(false)
       }
     }
   })
-  useEffect(() => {
-    if (data) console.log(data)
-  }, [data])
-
-  useEffect(() => {
-    if (showImg) document.getElementById("root")?.classList.add("brightness")
-    else document.getElementById("root")?.classList.remove("brightness")
-  }, [showImg])
 
   useEffect(() => {
     window.addEventListener("click", handleClick)
     return () => window.removeEventListener("click", handleClick)
   }, [])
+
+  useEffect(() => {
+    if (showImg) document.getElementById("root")?.classList.add("brightness")
+    else document.getElementById("root")?.classList.remove("brightness")
+  }, [showImg])
 
   useEffect(() => {
     if (data) {
@@ -89,10 +89,16 @@ export const UserPage: React.FC = (): JSX.Element => {
       }
     }
   }, [data])
+  useEffect(() => {
+    if (articles?.articles.length) {
+      setTop([...articles.articles].sort((a, b) => b.favoritesCount - a.favoritesCount)[0])
+    }
+  }, [articles])
+
   return !data ? (
     <CircularProgress className="m-auto" />
   ) : (
-    <>
+    <React.Fragment>
       <Box
         className="sm:h-[480px] p-[20px] rounded-[1.375rem] w-[60vw] m-auto animate-display"
         sx={{
@@ -102,7 +108,7 @@ export const UserPage: React.FC = (): JSX.Element => {
         }}
       >
         {data && (
-          <>
+          <React.Fragment>
             <img
               src={image}
               onClick={(e) => {
@@ -139,27 +145,63 @@ export const UserPage: React.FC = (): JSX.Element => {
             >
               {data.profile.bio}
             </Box>
+            {articles?.articles[0] && (
+              <Box
+                sx={{
+                  color: "text.primary",
+                  textAlign: "center",
+                }}
+                className="text-clamp-xs flex flex-col gap-3 items-center"
+              >
+                <Box>Last update {formatDistanceToNow(articles?.articles[0].updatedAt)} ago</Box>
+                {articles.articles.length > 1 && (
+                  <Button
+                    endIcon={<WorkspacePremiumIcon />}
+                    sx={{ textTransform: "capitalize", maxWidth: "150px" }}
+                    color="info"
+                    onClick={() => navigate(`/slug/${top?.slug}`)}
+                  >
+                    show top article
+                  </Button>
+                )}
+              </Box>
+            )}
             <Box className="mt-[10px] flex flex-col gap-4 items-center">
-              {user?.user.username === data.profile.username && (
+              {user?.user.username === data.profile.username && data.profile.bio && !openBio && (
                 <Button
                   startIcon={<EditIcon sx={{ fontSize: "16px" }} />}
                   variant="text"
                   color="success"
-                  onClick={() => setOpenBio(true)}
+                  onClick={() => {
+                    setOpenBio(true)
+                    setCloseBio(false)
+                  }}
                 >
                   Edit bio
                 </Button>
               )}
               {token && user?.user.username !== data.profile.username && (
                 <Box className="flex flex-col items-center gap-3" sx={{ fontSize: "12px", color: "text.primary" }}>
-                  {SwitchComponent(data.profile.following, data.profile.username, follow, unfollow)}
+                  <SwitchComponent
+                    follow={follow}
+                    unfollow={unfollow}
+                    following={data.profile.following}
+                    username={data.profile.username}
+                  />
                 </Box>
               )}
               {user?.user.username === data.profile.username && (
-                <>
-                  <form onSubmit={onSubmit} className="flex flex-col items-center gap-5">
-                    <CSSTransition nodeRef={bioRef} in={openBio} timeout={300} classNames="alert" unmountOnExit>
-                      <Box ref={bioRef} className="flex flex-col items-center gap-3">
+                <React.Fragment>
+                  <CSSTransition
+                    nodeRef={bioRef}
+                    in={!closeBio}
+                    timeout={300}
+                    classNames="alert"
+                    onExited={() => setOpenBio(false)}
+                    unmountOnExit
+                  >
+                    <form onSubmit={onSubmit} ref={bioRef} className="flex flex-col items-center gap-5">
+                      <Box className="flex flex-col items-center gap-3">
                         <FormField
                           name="bio"
                           id="bio"
@@ -167,28 +209,17 @@ export const UserPage: React.FC = (): JSX.Element => {
                           type="bio"
                           rows={1}
                           defaultValue={data.profile.bio}
-                          multiline={true}
                           register={register}
                           error={!!errors.bio}
                           errors={errors.bio}
                         />
                         <Box className="flex gap-2">
-                          <Button
-                            type="submit"
-                            color="info"
-                            variant="text"
-                            onClick={(e) => {
-                              if (!openBio) {
-                                e.preventDefault()
-                              }
-                              setOpenBio(true)
-                            }}
-                          >
+                          <Button type="submit" color="info" variant="text" onClick={() => setCloseBio(true)}>
                             Submit
                           </Button>
                           <Button
                             onClick={() => {
-                              setOpenBio(false)
+                              setCloseBio(true)
                               reset()
                               clearErrors()
                             }}
@@ -199,9 +230,10 @@ export const UserPage: React.FC = (): JSX.Element => {
                           </Button>
                         </Box>
                       </Box>
-                    </CSSTransition>
-                  </form>
-                  {!data.profile.bio && (
+                    </form>
+                  </CSSTransition>
+
+                  {!data.profile.bio && !openBio && (
                     <Button
                       color={openBio ? "error" : "info"}
                       variant="text"
@@ -210,7 +242,8 @@ export const UserPage: React.FC = (): JSX.Element => {
                           clearErrors()
                           reset()
                         }
-                        setOpenBio((prev) => !prev)
+                        setOpenBio(true)
+                        setCloseBio(false)
                       }}
                     >
                       Add Bio
@@ -225,7 +258,7 @@ export const UserPage: React.FC = (): JSX.Element => {
                   >
                     Edit Profile
                   </Button>
-                </>
+                </React.Fragment>
               )}
               {(articles?.articlesCount && (
                 <Button
@@ -243,7 +276,7 @@ export const UserPage: React.FC = (): JSX.Element => {
               )) ||
                 null}
             </Box>
-          </>
+          </React.Fragment>
         )}
       </Box>
       {data && (
@@ -253,10 +286,10 @@ export const UserPage: React.FC = (): JSX.Element => {
               src={image}
               alt="avatar"
               className="absolute xs:w-[70vw] s:w-[50vw] max-w-[700px] max-h-[700px] animate-display left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded"
-            ></img>
+            />
           </div>
         </Portal>
       )}
-    </>
+    </React.Fragment>
   )
 }

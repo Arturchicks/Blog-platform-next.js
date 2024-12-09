@@ -3,20 +3,15 @@ import CloseIcon from "@mui/icons-material/Close"
 import DoneIcon from "@mui/icons-material/Done"
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1"
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove"
-import { BaseQueryFn, TypedMutationTrigger } from "@reduxjs/toolkit/dist/query/react"
-import { Profile } from "shared/redux/types"
+import React from "react"
+import { SwitchTypes } from "pages/UserPage/types/types"
 
-export const SwitchComponent = (
-  following: boolean,
-  username: string,
-  follow: TypedMutationTrigger<Profile, string, BaseQueryFn>,
-  unfollow: TypedMutationTrigger<Profile, string, BaseQueryFn>
-) => {
+export const SwitchComponent: React.FC<SwitchTypes> = ({ following, username, follow, unfollow }) => {
   return (
     <Box className="w-min text-center">
       {!following ? (
-        <>
-          Not Follow <CloseIcon sx={{ fontSize: "12px" }} />
+        <React.Fragment>
+          Not following <CloseIcon sx={{ fontSize: "12px" }} />
           <Button
             onClick={() => follow(username)}
             sx={{ maxWidth: "150px", marginTop: "10px" }}
@@ -26,9 +21,9 @@ export const SwitchComponent = (
           >
             Follow
           </Button>
-        </>
+        </React.Fragment>
       ) : (
-        <>
+        <React.Fragment>
           You are following {<DoneIcon sx={{ fontSize: "12px" }} />}
           <Button
             onClick={() => unfollow(username)}
@@ -39,7 +34,7 @@ export const SwitchComponent = (
           >
             Unfollow
           </Button>
-        </>
+        </React.Fragment>
       )}
     </Box>
   )

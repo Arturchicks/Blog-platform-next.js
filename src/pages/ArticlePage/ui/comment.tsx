@@ -1,7 +1,7 @@
 import { Box, Button, Theme } from "@mui/material"
 import { format } from "date-fns"
 import { forwardRef } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useDeleteCommentMutation, useGetCommentsQuery } from "shared/redux/api"
 import { CommentType } from "shared/redux/types"
 import Markdown from "react-markdown"
@@ -13,6 +13,7 @@ const Comment = forwardRef<HTMLDivElement, CommentType>(function MyComment(props
   const { slug } = useParams()
   const [deleteComment] = useDeleteCommentMutation()
   const { refetch } = useGetCommentsQuery(`${slug}`)
+  const navigate = useNavigate()
   const theme = useTheme() as Theme
   const handleDeleteComment = async (e: CommentType) => {
     const { error } = await deleteComment({ id: e.id, slug })
@@ -26,11 +27,17 @@ const Comment = forwardRef<HTMLDivElement, CommentType>(function MyComment(props
         theme.palette.mode === "dark" && "border-[#787879]"
       )}
     >
-      <img
-        src={props.author.image}
-        alt="avatar"
-        className="min-w-[46px] w-[46px] h-[46px] rounded-[50%] self-start gradient-box"
-      />
+      <Button
+        className="self-start"
+        sx={{ minWidth: "46px", padding: 0 }}
+        onClick={() => navigate(`/profile/${props.author.username}`)}
+      >
+        <img
+          src={props.author.image}
+          alt="avatar"
+          className="min-w-[46px] w-[46px] h-[46px] rounded-[50%] border-[2px] border-solid border-[#1890FF] hover:opacity-50 transition-opacity duration-300"
+        />
+      </Button>
       <div>
         <div className="flex gap-2">
           <span className="text-[16px]">{props.author.username}</span>

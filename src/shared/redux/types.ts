@@ -97,3 +97,8 @@ export interface CommentType {
 export interface CommentsType {
   comments: Comment[]
 }
+export interface ErrorProps {
+  message?: string | undefined | null
+  fontsize?: number
+  px?: number | string
+}

@@ -33,15 +33,16 @@ export const AppHeader: React.FC = () => {
   }, [])
   console.log("header")
   return (
-    <Box className="h-[75px]">
+    <header className="h-[75px]">
       <Box
         id="header"
         className="flex p-2 h-[75px] items-center justify-between fixed w-[100%]"
         sx={{
-          bgcolor: "primary.main",
+          bgcolor: theme.palette.mode === "dark" ? "rgba(34, 35, 37, 0.8)" : "#fffc",
           color: "secondary.main",
           boxShadow: `0 -2px 5px ${theme.palette.text.primary}`,
-          zIndex: 1,
+          zIndex: 2,
+          backdropFilter: "saturate(180%) blur(5px)",
         }}
       >
         <Box className={clsx("flex flex-wrap items-center justify-center")}>
@@ -53,7 +54,7 @@ export const AppHeader: React.FC = () => {
             }}
           >
             {!isMobile && (
-              <span className="flex text-[18px] text-clip whitespace-nowrap align-middle text-[#0288d1] hover:opacity-70 transition-opacity duration-200">
+              <span className="flex text-[20px] text-clip whitespace-nowrap align-middle text-[#00a5ff] hover:opacity-70 transition-opacity duration-200">
                 RealW{<IoPlanetSharp className="self-center" />}rld Blog
               </span>
             )}
@@ -126,7 +127,7 @@ export const AppHeader: React.FC = () => {
                   src={data.user.image || avatar}
                   alt="avatar"
                   className={clsx(
-                    "xs:w-12 xs:h-12 lg:w-14 lg:h-14 border-[2px] border-solid border-[#1890FF] rounded-[50%]",
+                    "xs:min-w-12 xs:min-h-12 xs:max-w-12 xs:max-h-12 lg:min-w-14 lg:min-h-14 lg:max-w-14 lg:ax-h-14 border-[2px] border-solid border-[#1890FF] rounded-[50%]",
                     isPointer ? "hover:opacity-50 transition-opacity duration-200 ease-in-out" : null
                   )}
                 />
@@ -152,6 +153,6 @@ export const AppHeader: React.FC = () => {
           </Box>
         )}
       </Box>
-    </Box>
+    </header>
   )
 }
